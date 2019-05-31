@@ -3,7 +3,7 @@
 ---
 
 ### What about FFT v.s. DFT?
-![img](literature/jotarios/img/fftvsdft.jpeg)
+![img](/literature/jotarios/img/fftvsdft.jpeg)
 
 ---
 
