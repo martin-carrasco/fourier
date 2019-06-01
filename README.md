@@ -26,7 +26,14 @@
 
 ## Useful resources
 
-+ [But, what is a Fourier Transform?](https://www.youtube.com/watch?v=spUNpyF58BY)
++ [3blue1brown. _But, what is a Fourier Transform?_](https://www.youtube.com/watch?v=spUNpyF58BY)
+    + For an intuition of Fourier Transforms (recommended by dgcnz).
++ [Charles Van Loan. _Computational Frameworks for the Fast Fourier Transform_, 1992.](https://dl.acm.org/citation.cfm?id=130635)
+    + For understanding of FFT and the mathematics of multidimensional FFTs (recommended by CLRS).
++ [Alan V. Oppenheim and Ronald W. Schafe, with John R. Buck. _Discrete-Time Signal Processing_, 1997.](https://dl.acm.org/citation.cfm?id=1795494)
+    + For an introduction to signal processing and handling case when `n` is not power of 2 (recommended by CLRS).
++ [Rafael C. Gonzalez and Richard E. Woods. _Digital Image Processing_, 1992](https://dl.acm.org/citation.cfm?id=573607)
+    + For a discussion in multidimensional Fourier Transforms and their use in image processing (recommended by CLRS).
 
 ## Literature
 
