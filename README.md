@@ -12,9 +12,10 @@
 + Linear algebra
     + Basis functions
     + Eigenvalues
-    + Orthogonality
+    + Orthogonality (very important)
     + Convolution of functions
     + Kernels
+    + Spectral theory
 
 
 ## Applications
