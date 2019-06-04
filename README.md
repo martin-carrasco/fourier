@@ -28,6 +28,9 @@
 
 + [3blue1brown. _But, what is a Fourier Transform?_](https://www.youtube.com/watch?v=spUNpyF58BY)
     + For an intuition of Fourier Transforms (recommended by dgcnz).
++ [Math.StackExchange. _How is the Fourier Transform Linear?_](https://math.stackexchange.com/questions/140788/how-is-the-fourier-transform-linear)
+    + For a discussion on what it means to be a linear transform and how can a Fourier Transform be considered one.
+    + Spoiler alert: If it satisfies two conditions, namely, additivity (addition) and homogeneity (multiplication by scalar).
 + [Charles Van Loan. _Computational Frameworks for the Fast Fourier Transform_, 1992.](https://dl.acm.org/citation.cfm?id=130635)
     + For understanding of FFT and the mathematics of multidimensional FFTs (recommended by CLRS).
 + [Alan V. Oppenheim and Ronald W. Schafe, with John R. Buck. _Discrete-Time Signal Processing_, 1997.](https://dl.acm.org/citation.cfm?id=1795494)
