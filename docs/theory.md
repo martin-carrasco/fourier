@@ -11,7 +11,7 @@ $$
 x = \{x [n] \} \quad -\infty < n < \infty
 $$
 
-If such sequence arises from periodic sampling of an analog signal $ x_a(t) $, the numeric value of the nth number in the sequence is equal to the value of the analog signal, $x_a(t)$, at time $nT$.
+If such sequence arises from periodic sampling of an analog signal $x_a(t)$, the numeric value of the nth number in the sequence is equal to the value of the analog signal, $x_a(t)$, at time $nT$.
 
 `Eq. 2.2`:
 $$
