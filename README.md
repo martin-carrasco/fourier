@@ -12,9 +12,10 @@
 + Linear algebra
     + Basis functions
     + Eigenvalues
-    + Orthogonality
+    + Orthogonality (very important)
     + Convolution of functions
     + Kernels
+    + Spectral theory
 
 
 ## Applications
@@ -23,6 +24,21 @@
 + Noise reduction in sound
 + Signal decomposition
 + Chord extraction (needs ML or Statistic Model)
+
+## FAQ
+
++ What is signal processing?
+    + _"Signal processing deals with the representation, transformation, and manipulation of signals and the informatioon the signals contain."_ (Oppenheim 2000)
++ What is an analog signal?
+    + It's another name for a _continuous signal_.
++ What is an digital signal?
+    + It's another name for a _discrete signal_.
++ What is the difference between multiplication and convolution?
+    + Multiplication in your first sentence is term-by-term multiplication: $z[n] = x[n]y[n]$ for all $n$.
+    + Convolution, for discrete-time sequences, is equivalent to polynomial multiplication which is not the same as the term-by-term multiplication. Convolution also requires a lot more calculation: typically $N^2$ multiplications for sequences of length $N$ instead of the $N$ multiplications of the term-by-term multiplication.
++ How does the Fourier Transform relate to polynomial multiplication (convolution)
+    + The key point of Fourier analysis is that term-by-term multiplication in one domain is the same as convolution in the other domain. So, in order to calculate the results of a convolution, you can either do it directly, using $N^2$ multiplications, or transform to the other domain, do a term-by-term multiplication, and transform back. This requires two transformations to go from one domain to the other, $N$ multiplications in the other domain, and one inverse transformation to come back to
+        the domain where the convolution result is needed. This more complicated process can, in fact, require less computation because the transformations can be done very efficiently via the Fast Fourier Transform (FFT) algorithm which requires about $NlogN$  multiplications. So, compare the computational effort in calculating the three transforms and doing the term-by-term multiplication to $N^2$ to see if the FFT gives you a more efficient method of computing a convolution.
 
 ## Useful resources
 
