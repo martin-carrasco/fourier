@@ -14,6 +14,38 @@
 ---
 
 ## Theory
+### Fourier transform
+Any continoun signal in the time domain could be represented by sum of sinusoids
+![](/../images/FT1.jpg)
+
+#### why sinusoids?
+they are the only waveform that doesn't change shape when subject to a linear invariant system
+![](/../images/FT1_3.png)
+### Systems
+Is any process that produces an output signal in response to an input signal.
+__X[t] = Y[t]__
+![](/../images/FT1_2.png)
+
+### Linear time invariant system
+LTI systems are those that are both linear and time-invariant.
+#### Linear propiety
+The output is linearly related to the input.
+
+__X<sub>1</sub>[t] = y<sub>1</sub>[t]__
+__X<sub>2</sub>[t] = y<sub>2</sub>[t]__ 
+
+__(x<sub>1</sub>[t] + x<sub>2</sub>[t]) = (y<sub>1</sub>(t) + y<sub>2</sub>(t)__
+__(a.x<sub>1</sub>[t] + b.x<sub>2</sub>(t)) = (a.y<sub>1</sub>(t) + b.y<sub>2</sub>(t)__ 
+
+__T[a.x<sub>1</sub>[t] + b.x<sub>2</sub>(t)] = a.T[x<sub>1</sub>(t)] + b.T[x<sub>2</sub>(t)]__   
+
+![](/../images/FT1_3.png)
+
+Note: if an input is 0, the output is also 0.
+#### Time propiety
+Systems where the output for a particular input does not change deppending on when that input was applied.
+### convolution sum
+### Frequency domain
 
 
 
