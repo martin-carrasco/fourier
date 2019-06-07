@@ -73,6 +73,9 @@ $$
 ## Time-Invariant systems
 
 A time-invariant system (also, shift-invariant system) is a system for which a time shift or delay of the input sequence causes a corresponding shift in the output sequence.
+
+This means that for all $n_0$, the input sequence with values $x_1[n] = x_2[n]$ produces the output sequence with values $y_1[n] = y[n-n_0]$.
+
 ## LTI systems (linear and time invariant)
 
 + Must abide linearity property (additivity and homogeneity principles)
@@ -87,6 +90,13 @@ $$
 and the principle of superposition in `Eq. 2.24`, we can write
 
 `Eq. 2.48`
+$$
+y[n] = \sum_{k=-\infty}^{\infty} T{x[k]\partial[n - k]} = \sum_{k=-\infty}^{\infty} T{x[k]h_k[n]}
+$$
+
+Applying the constraint of time invariance:
+
+`Eq. 2.49`
 $$
 y[n] = \sum_{k=-\infty}^{\infty} T{x[k]\partial[n - k]} = \sum_{k=-\infty}^{\infty} T{x[k]h_k[n]}
 $$
