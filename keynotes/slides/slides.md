@@ -29,24 +29,24 @@ __X[t] = Y[t]__
 ### Linear time invariant system
 LTI systems are those that are both linear and time-invariant.
 #### Linear propiety
-The output is linearly related to the input.
+The output is linearly related to the input.   
 
-__X<sub>1</sub>[t] = y<sub>1</sub>[t]__
-__X<sub>2</sub>[t] = y<sub>2</sub>[t]__ 
+__X<sub>1</sub>[t] = y<sub>1</sub>[t]__   
+__X<sub>2</sub>[t] = y<sub>2</sub>[t]__   
 
-__(x<sub>1</sub>[t] + x<sub>2</sub>[t]) = (y<sub>1</sub>(t) + y<sub>2</sub>(t)__
-__(a.x<sub>1</sub>[t] + b.x<sub>2</sub>(t)) = (a.y<sub>1</sub>(t) + b.y<sub>2</sub>(t)__ 
+__(x<sub>1</sub>[t] + x<sub>2</sub>[t]) = (y<sub>1</sub>(t) + y<sub>2</sub>(t)__   
+__(a.x<sub>1</sub>[t] + b.x<sub>2</sub>(t)) = (a.y<sub>1</sub>(t) + b.y<sub>2</sub>(t)__   
 
 __T[a.x<sub>1</sub>[t] + b.x<sub>2</sub>(t)] = a.T[x<sub>1</sub>(t)] + b.T[x<sub>2</sub>(t)]__   
 
 ![](/../images/FT1_3.png)
 
 Note: if an input is 0, the output is also 0.
-#### Time propiety
+#### Time-invariant propiety
 Systems where the output for a particular input does not change deppending on when that input was applied.
-### convolution sum
-### Frequency domain
-
+### convolution
+Representation of signals as a linear combination of delayed input signals.   
+Discrete time signals can be represented using the convolution sum.
 
 
 ---
