@@ -1,0 +1,4 @@
+keynotes/node_modules/*
+keynotes/package-lock.json
+.DS_Store
+*/*/.DS_Store
