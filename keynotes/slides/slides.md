@@ -13,7 +13,13 @@
 
 ---
 
-## Theory [Diego & Indhira]
+## Theory
+
+---
+
+### Spoiler
+
+> A system's frequency response, $H$ is the Fourier Transform of it's impulse response, $h$.
 
 ---
 
@@ -71,7 +77,7 @@ A discrete-time system is defined mathematically as a transformation or operator
 
 `Eq. 2.19`
 $$
-y[n] = T{x[n]}
+y[n] = T\{x[n]\}
 $$
 
 ---
@@ -83,7 +89,7 @@ The principle of superposition can be defined as:
 
 `Eq. 2.24`
 $$
-T{ax_1[n] + bx_2[n]} = aT{x_1[n]} + bT{x_2[n]}
+T\{ax_1[n] + bx_2[n]\} = aT\{x_1[n]\} + bT\{x_2[n]\}
 $$
 
 ---
@@ -104,7 +110,7 @@ This means that for all $n_0$, the input sequence with values $x_1[n] = x_2[n]$ 
 
 `Eq. 2.47`
 $$
-y[n] = T{ \sum_{k=-\infty}^{\infty} x[k]\partial[n - k] }
+y[n] = T\{ \sum_{k=-\infty}^{\infty} x[k]\partial[n - k] \}
 $$
 
 ---
@@ -113,7 +119,7 @@ and the principle of superposition in `Eq. 2.24`, we can write
 
 `Eq. 2.48`
 $$
-y[n] = \sum_{k=-\infty}^{\infty} T{x[k]\partial[n - k]} = \sum_{k=-\infty}^{\infty} T{x[k]h_k[n]}
+y[n] = \sum_{k=-\infty}^{\infty} T\{x[k]\partial[n - k]\} = \sum_{k=-\infty}^{\infty} T\{x[k]h_k[n]\}
 $$
 
 ---
@@ -122,11 +128,75 @@ Applying the constraint of time invariance:
 
 `Eq. 2.49`
 $$
-y[n] = \sum_{k=-\infty}^{\infty} T{x[k]\partial[n - k]} = \sum_{k=-\infty}^{\infty} T{x[k]h_k[n]}
+y[n] = \sum_{k=-\infty}^{\infty} T\{x[k]\partial[n - k]\} = \sum_{k=-\infty}^{\infty} T\{x[k]h_k[n]\} = x[n] * h[n]
 $$
-
-
 
 ---
 
-## Application [Jorge & Martin]
+Substituting into `Eq. 2.61`, with input $x[n] = e^{jwn}$
+
+---
+
+#### Why sinusoids?
+
+They are the only waveform that does not change shape when subject to a linear invariant system.
+
+![](../images/FT1_3.png)
+
+---
+
+## Application
+
+### Image processing
+
+In terms of blurred images, if the motion blur on said image is shift-invariante then it is usually modeled as a convolution of that image. Meaning that the blurred image actually has 2 components:
+
+- Latent image: The original image that has been affected by a blur kernel
+- Motion blur: The blur kernel that applied to the image causes the blur
+
+Now there are 2 methods for image deconvolution:
+
+- _Non-blind Deconvolution_ :  In this method it is assumed that you already have the blur kernel and you just need to do the reverse operation
+
+- _Blind Deconvolution_: In blind deconvolution there is also as an additional task, using some kind of modeling strategy, to find out the closes possible blur kernel to the original one.
+
+  Some popular strategies for finding these motion deconvolutions ranged from proposing 2 consequente instances of an image in time, rotating the image, etc. However they all proved either inexact or had a high computational cost.
+
+An easy iterative blind approach would be as follows:
+
+ __L<sup>´</sup> = argmin<sub>L</sub> { ||B - K *  L  || + p<sub>L</sub>(L) }__
+
+ __K<sup>´</sup> = argmin<sub>L</sub> { ||B - K *  L  || + p<sub>K</sub>(K }__
+
+
+
+given that the motion blur equations is
+
+~~~C
+B= K * L + N
+~~~
+
+where the basic terms
+
+~~~C
+B = blurred image
+K = motion kernel or PSF (point spread function)
+L = current latent image
+~~~
+
+
+
+However we are going to be using FFT to speed up the process of the calculations. To do this we will devide the operations in 3 steps:
+
+
+
+* Prediction: Here we will predict a base L value to be used in the next step. This will be a really simple blind approximation using Gaussian prior.
+
+* Kernel Estimation: Using our base case L we will use FFT to accuratly approximate K as much as possible
+
+* Deconvolution: Since we now have all the elements needed to produce the "clear" image we will again apply FFT to deconvolute.
+
+
+
+
+

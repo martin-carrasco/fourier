@@ -95,6 +95,23 @@
 │   │       └── Noise reduction algorithms using Fibonacci Fourier transforms - 2008.pdf
 │   └── parts in books
 │       └── Fast Fourier Transform (FFT) on GPUs - Chapter 16 - 2014.pdf
+│
+│
+│
+├── martin-carrasco
+│	├── fft
+│		├── An Omega((n log n)R) Lower Bound for Fourier Transform Computation.pdf
+│		├── On Computing the FFT.pdf
+|		|
+│		└── Sparse Fourier Transform in Any Constant Dimension with Nearly-Optimal Sample Complexity in Sublinear Time.pdf
+│	└── images
+│		├── An Accurate Nonuniform Fourier Transform for SPRITE Magnetic Resonance Imaging Data.pdf
+│		├── Determining Image Orientation using the Hough and Fourier Transforms.pdf
+│		├── High-quality Motion Deblurring from a Single Image.pdf
+│		├── Image Motion Estimation from Motion Smear -  A New Computational Model (1996).pdf
+|		|
+│		└── With J Fast Fourier Transforms and Removing Motion Blur.pdf
+│
 └── ramirez
     ├── FrationalFourierTransform.pdf
     ├── FrationalFourierTransform.pdfNoise removal in speech signal using fractional fourier transform-2017 .pdf
