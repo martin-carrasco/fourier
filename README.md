@@ -27,6 +27,8 @@
 
 ## FAQ
 
++ What is the difference between Fourier Series and Fourier Transform?
+    + _A Fourier Transform is a way to move from one domain to another to simplify the calculations of an functions. While a Fourier Series is a way to divide a function in all of its sinusoidal compontents. Also a Fourier Transform is aperiodic while a Fourier Series is periodic (* 1 / T)_ 
 + What is signal processing?
     + _"Signal processing deals with the representation, transformation, and manipulation of signals and the informatioon the signals contain."_ (Oppenheim 2000)
 + What is an analog signal?
