@@ -60,25 +60,51 @@ vector< vector< cn > > load_img(string filename){
     return rows;
 }
 
-void img_transform(vector< vector< cn > > complex_mat){
-    int width = matrix.size()
+void img_transform(vector< vector< cn > > matrix){
+    int width = matrix.size();
     int height = matrix[0].height();
+    
+    int P = width * 2;
+    int Q = height * 2;
 
-    //vector< vector< cn > > complex_mat = convert_to_complex(matrix);
+    //Zero pad image for P = 2W, P = 2H so P x Q = IMG
+    vector< vector< cn > rows(width*2, vector< vector< cn > > c(2*height));
 
-    //2D FFT
-    2dfft(complex_mat, width, height);
-
-    //Create a low pass mask for low frequency domain
-    vector< vector< int > > low_pass_mask = low_pass_filter(width, height, 3);
-
-    //Apply the low pass mask in the frequency domain
     for(int x = 0;x < width;x++){
         for(int y = 0;y < height;y++){
-            complex_mat[x][y] = complex_mat[x][y]  * low_pass_mask[x][y]; 
+            rows[x][y] = matrix[x][y];
         }
     }
-    //Reverse 2D FFT
 
-    //Save img
+    //Multiply by (-1)^x+y to center it to u = P / 2 and v Q / 2 where u and v are center coordinates
+    for(int x = 0;x < P;x++){
+        for(int y = 0;y < Q;y++){
+            rows[x][y] = rows[x][y] * pow(-1, x+y);
+        }
+    }
+
+    //2D FFT
+    2dfft(complex_math, 2*width, 2*height);
+
+    //Make filter h(x, y) for P x Q size and apply do H(x, y) = F(h(x, y))
+    vector< vector< int > > filter_mask = low_pass_filter(P, Q, 3);
+
+    //Center H(x, y) to (P/2, Q/2) - multiply by (-1)^x+y 
+    for(int x = 0;x < P;x++){
+        for(int y = 0;y < Q;y++){
+            filter_mask[x][y] = filter_mask[x][y] * pow(-1, x+y);
+        }
+    }
+
+    //Apply the filter H(x, y) to F(x, y) (multiply)
+    for(int x = 0;x < width;x++){
+        for(int y = 0;y < height;y++){
+            rows[x][y] = rows[x][y]  * filter_mask[x][y]; 
+        }
+    }
+
+    //Inverse 2D FFT
+    
+
+    //Crop back
 }
