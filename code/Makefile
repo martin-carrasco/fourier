@@ -5,7 +5,7 @@ LIB = lib
 BIN = bin
 
 CXX = g++
-CXXFLAGS = -std=c++17 -o $@ -I $(INC)
+CXXFLAGS = -g -std=c++17 -o $@ -I $(INC)
 
 .PRECIOUS: $(OBJ)/%.o
 

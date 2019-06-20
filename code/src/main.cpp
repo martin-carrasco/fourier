@@ -1,4 +1,4 @@
-#include "../include/fft.h"
+#include "../include/2dfft.h"
 #include "../include/types.h"
 #include <iostream>
 
@@ -6,27 +6,25 @@ using namespace std;
 
 int main(void)
 {
-    vector<cn> x = { 0.24200326, 0.96688159, 0.87782714, 0.8408777 };
-    vector<cn> y = recursive_fft(x);
-    vector<cn> xp = recursive_ifft(y);
+    vector<vector<cn>> input_mat;
 
-    cout << "Originally in time domain:\n";
-    for (auto i : x) {
-        cout << i << " ";
-    }
-    cout << endl;
+    vector<cn> input_vec0 = { 0.24015828, -0.86474901, 6.70624768, -1.69587419 };
+    vector<cn> input_vec1 = { 5.95275288, 4.54761255, 1.64295669, -2.16218665 };
+    vector<cn> input_vec2 = { -0.18274577, -4.59299313, -9.39010456, -0.90969898 };
+    vector<cn> input_vec3 = { 0.46954236, -3.14142204, -6.569748, -1.08002712 };
 
-    cout << "In frequency domain:\n";
-    for (auto i : y) {
-        cout << i << " ";
-    }
-    cout << endl;
+    input_mat.push_back(input_vec0);
+    input_mat.push_back(input_vec1);
+    input_mat.push_back(input_vec2);
+    input_mat.push_back(input_vec3);
 
-    cout << "Again in time domain:\n";
-    for (auto i : xp) {
-        cout << i << " ";
-    }
-    cout << endl;
+    cout << "Before transform: " << endl;
+    p(input_mat);
+
+    fft2d(input_mat, 4, 4);
+
+    cout << "After transform: " << endl;
+    p(input_mat);
 
     return 0;
 }
