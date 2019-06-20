@@ -55,6 +55,7 @@
     + For an introduction to signal processing and handling case when `n` is not power of 2 (recommended by CLRS).
 + [Rafael C. Gonzalez and Richard E. Woods. _Digital Image Processing_, 1992](https://dl.acm.org/citation.cfm?id=573607)
     + For a discussion in multidimensional Fourier Transforms and their use in image processing (recommended by CLRS).
++ https://brilliant.org/wiki/roots-of-unity/
 
 ## Literature
 
