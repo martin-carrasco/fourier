@@ -6,6 +6,9 @@ keynotes/dist/*
 */CMakeFiles/
 */CMakeCache.txt
 
+code/Makefile
+code/Project
+code/cmake_install.cmake
 
 # Created by https://www.gitignore.io/api/c++,clion+all
 # Edit at https://www.gitignore.io/?templates=c++,clion+all

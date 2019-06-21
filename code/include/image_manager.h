@@ -10,9 +10,14 @@
 
 float dist_e(int cx, int cy, int px, int py);
 
+bool cmp_complex(cn a, cn b);
+
 std::vector<std::vector<cn>> low_pass_filter(int width, int height, int d0);
 
-void save_img(std::vector< std::vector< cn > > vec);
+std::vector<std::vector<cn>> median_filter(std::vector<std::vector<cn>> vec,
+                                           int width, int height, int d0);
+
+void save_img(std::vector<std::vector<cn>> vec);
 
 std::vector<std::vector<cn>> load_img(std::string filename);
 
