@@ -1,5 +1,7 @@
 # Fourier Transform
 
+> Your code is shit - Linus Torvalds
+
 ## Concepts to be reviewed
 
 + Time vs Frequency Domains
