@@ -21,7 +21,7 @@ int main(void)
     cout << "Before transform: " << endl;
     p(input_mat);
 
-    fft2d(input_mat, 4, 4, false);
+    fft2d(input_mat, 4, 4);
 
     cout << "After transform: " << endl;
     p(input_mat);
