@@ -1,12 +1,11 @@
 #include "../include/image_manager.h"
-#include "../include/types.h"
 #include <cmath>
 #include <fstream>
 #include <sstream>
 #include <vector>
 
 using namespace std;
-/*
+
 float dist_e(int cx, int cy, int px, int py)
 {
     return sqrt(
@@ -43,8 +42,8 @@ int low_pass_filter(int width, int height, int d0)
     }
     return rows;
 }
-
-vector<vector<cn>> load_img(string filename)
+ 
+vector< vector<cn> > load_img(string filename)
 {
     ifstream file(filename);
     string line;
@@ -62,10 +61,22 @@ vector<vector<cn>> load_img(string filename)
         }
         rows.push_back(col);
     }
+    file.close();
     return rows;
 }
 
-void img_transform(vector<vector<cn>> matrix)
+void save_img(vector< vector<cn> > vec){
+    ofstream f_out("../input/input.txt")
+    for(auto row : vec){
+        for(auto col : row){
+            f_out << real(row) << ",";
+        }
+        cout << endl;
+    }
+    f_out.close();
+}
+
+vector< vector<cn> > img_transform(vector<vector<cn>> matrix)
 {
     int width = matrix.size();
     int height = matrix[0].size();
@@ -90,10 +101,13 @@ void img_transform(vector<vector<cn>> matrix)
     }
 
     //2D FFT
-    2dfft(complex_math, 2 * width, 2 * height);
+    2dfft(complex_math, P, Q);
 
-    //Make filter h(x, y) for P x Q size and apply do H(x, y) = F(h(x, y))
+    //Make filter h(x, y) for P x Q
     vector<vector<int>> filter_mask = low_pass_filter(P, Q, 3);
+
+    //2D FFT to make H(x, y) from h(x, y)
+    2dfft(filter_mask, P, Q);
 
     //Center H(x, y) to (P/2, Q/2) - multiply by (-1)^x+y
     for (int x = 0; x < P; x++) {
@@ -110,7 +124,9 @@ void img_transform(vector<vector<cn>> matrix)
     }
 
     //Inverse 2D FFT
+    i2dfft(rows, P, Q);
 
     //Crop back
+    
+    return rows;
 }
-*/
