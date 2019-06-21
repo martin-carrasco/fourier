@@ -11,7 +11,7 @@ project(Project)            # this sets the project name
 file(GLOB_RECURSE libs      lib/*.cpp)
 file(GLOB_RECURSE includes      include/*.h)
 set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wfloat-conversion")
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules)
 
@@ -30,7 +30,7 @@ message( ${includes} )
 add_executable(project src/main.cpp ${libs} ${includes})
 
 include_directories(${OpenCV_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+link_libraries(Project ${OpenCV_LIBS})
 # Just for example add some compiler flags.
 # target_compile_options(project PUBLIC -std=c++17 -Wall -Wfloat-conversion)
 

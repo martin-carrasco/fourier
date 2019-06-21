@@ -8,9 +8,9 @@ float dist_e(int cx, int cy, int px, int py)
         pow(cx - px, 2) + pow(cy - py, 2));
 }
 
-int low_pass_filter(int width, int height, int d0)
+vector<vector<cn>> low_pass_filter(int width, int height, int d0)
 {
-    vector<vector<int>> rows(width, vector<int>(height, 0));
+    vector<vector<cn>> rows(width, vector<cn>(height, 0));
     for (auto row : rows) {
         vector<cn> col(height, 0);
         rows.push_back(col);
@@ -52,7 +52,7 @@ vector< vector<cn> > load_img(string filename)
 
         while (ss >> tmp_int) {
             col.push_back(tmp_int);
-            if (ss.peek(","))
+            if (ss.peek(','))
                 ss.ignore();
         }
         rows.push_back(col);
