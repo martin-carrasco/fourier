@@ -1,1 +1,0 @@
-/usr/bin/c++  -std=c++17 -Wall -Wfloat-conversion  -rdynamic CMakeFiles/project.dir/src/main.cpp.o CMakeFiles/project.dir/lib/2dfft.cpp.o CMakeFiles/project.dir/lib/fft.cpp.o CMakeFiles/project.dir/lib/image_manager.cpp.o CMakeFiles/project.dir/lib/opencv_manager.cpp.o  -o project 
