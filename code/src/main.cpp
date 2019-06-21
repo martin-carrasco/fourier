@@ -6,7 +6,7 @@ using namespace std;
 
 int main(void)
 {
-    vector<vector<cn>> input_mat;
+    vector<vector<cn>> input_mat, nn;
 
     vector<cn> input_vec0 = { 0.24015828, -0.86474901, 6.70624768, -1.69587419 };
     vector<cn> input_vec1 = { 5.95275288, 4.54761255, 1.64295669, -2.16218665 };
@@ -21,10 +21,15 @@ int main(void)
     cout << "Before transform: " << endl;
     p(input_mat);
 
-    fft2d(input_mat, 4, 4);
+    fft2d(input_mat, 4, 4, false);
 
     cout << "After transform: " << endl;
     p(input_mat);
 
+    cout << "After inverse: " <<endl;
+
+    cout<< endl;
+    ifft2d(input_mat,4,4);
+    p(input_mat);
     return 0;
 }
