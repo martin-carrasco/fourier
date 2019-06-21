@@ -80,7 +80,22 @@ keynotes/dist/*
 # .idea/modules
 
 # CMake
-cmake-build-*/
+code/cmake-build-*/
+code/CMakeLists.txt.user
+code/CMakeCache.txt
+code/CMakeFiles
+code/CMakeScripts
+code/Testing
+code/cmake_install.cmake
+code/install_manifest.txt
+code/compile_commands.json
+code/CTestTestfile.cmake
+code/src/CMakeFiles
+code/src/cmake_install.cmake
+code/build/*
+code/bin/*
+code/tools
+code/thirdparty
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml

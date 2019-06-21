@@ -1,51 +1,137 @@
-cmake_minimum_required(VERSION 3.0) # setting this is required
-project(Project)            # this sets the project name
+# <Copyright Holder>. Copyright (C) <Copyright Year(s)>. <License>.
 
-###############################################################################
-## file globbing ##############################################################
-###############################################################################
+#
+# Project Properties
+#
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6.2)
+PROJECT (projectname)
+SET (APPLICATION_NAME "Project Name")
+SET (APPLICATION_CODENAME "${PROJECT_NAME}")
+SET (APPLICATION_COPYRIGHT_YEARS "2009")
+SET (APPLICATION_VERSION_MAJOR 1)
+SET (APPLICATION_VERSION_MINOR 0)
+SET (APPLICATION_VERSION_PATCH 0)
+SET (APPLICATION_VERSION_TYPE SNAPSHOT)
+SET (APPLICATION_VERSION_STRING "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_PATCH}-${APPLICATION_VERSION_TYPE}")
+SET (APPLICATION_VENDOR_ID "com.yourcompany")
+SET (APPLICATION_VENDOR_NAME "Your Company")
+SET (APPLICATION_VENDOR_URL "yourcompany.com")
+SET (APPLICATION_ID "${APPLICATION_VENDOR_ID}.${PROJECT_NAME}")
 
-# These instructions search the directory tree when cmake is
-# invoked and put all files that match the pattern in the variables
-# `libs`.
-file(GLOB_RECURSE libs      lib/*.cpp)
-file(GLOB_RECURSE includes      include/*.h)
-set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wfloat-conversion")
-#set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules)
+#
+# Debugging Options
+#
+SET (CMAKE_VERBOSE_MAKEFILE 0) # Use 1 for debugging, 0 for release
 
-find_package(OpenCV REQUIRED)
-# You can use set(sources src/main.cpp) etc if you don't want to
-# use globbing to find files automatically.
+#
+# Project Output Paths
+#
+SET (MAINFOLDER ${PROJECT_SOURCE_DIR})
+SET (EXECUTABLE_OUTPUT_PATH "${MAINFOLDER}/bin")
+SET (LIBRARY_OUTPUT_PATH "${MAINFOLDER}/lib")
 
-###############################################################################
-## target definitions #########################################################
-###############################################################################
+#
+# Project Search Paths
+#
+LIST (APPEND CMAKE_PREFIX_PATH "${MAINFOLDER}")
+LIST (APPEND CMAKE_PREFIX_PATH "${MAINFOLDER}/tools")
+LIST (APPEND CMAKE_PREFIX_PATH "${MAINFOLDER}/thirdparty")
+SET (CMAKE_MODULE_PATH "${MAINFOLDER}/tools/share/cmake")
 
-# The data is just added to the executable, because in some IDEs (QtCreator)
-# files are invisible when they are not explicitly part of the project.
-message( ${libs} )
-message( ${includes} )
-add_executable(project src/main.cpp ${libs} ${includes})
+INCLUDE_DIRECTORIES("${MAINFOLDER}/thirdparty/include")
+INCLUDE_DIRECTORIES("${MAINFOLDER}/include")
 
-include_directories(${OpenCV_INCLUDE_DIRS})
-link_libraries(Project ${OpenCV_LIBS})
-# Just for example add some compiler flags.
-# target_compile_options(project PUBLIC -std=c++17 -Wall -Wfloat-conversion)
+#
+# Locate Project Prerequisites
+#
 
-# This allows to include files relative to the root of the src directory with a <> pair
-# target_include_directories(project PUBLIC include)
+FIND_PACKAGE(PkgConfig)
+PKG_CHECK_MODULES(Portaudio REQUIRED portaudio-2.0)
+INCLUDE_DIRECTORIES(${Portaudio_INCLUDE_DIRS})
+LINK_DIRECTORIES(${Portaudio_LIBRARY_DIRS})
+PKG_CHECK_MODULES(OPENCV REQUIRED opencv4)
+INCLUDE_DIRECTORIES(${OPENCV_INCLUDE_DIRS})
+LINK_DIRECTORIES(${OPENCV_LIBRARY_DIRS})
 
-###############################################################################
-## dependencies ###############################################################
-###############################################################################
+# SET (Boost_ADDITIONAL_VERSIONS "1.39" "1.39.0" "1.40" "1.40.0" "1.41" "1.41.0" "1.42" "1.42.0" "1.43" "1.43.0" "1.44" "1.44.0" "1.45" "1.45.0" "1.46" "1.46.0" "1.47" "1.47.0" "1.48" "1.48.0" "1.49" "1.49.0" "1.50" "1.50.0")
+# FIND_PACKAGE (Boost 1.37 COMPONENTS "date_time" "filesystem" "graph" "iostreams" "program_options" "regex" "serialization" "signals" "system" "thread" "wserialization" REQUIRED)
+# INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+# LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+# FIND_PACKAGE (Qt4 REQUIRED)
+# INCLUDE(UseQt4)
+# FIND_PACKAGE (Log4Cxx REQUIRED)
+# INCLUDE_DIRECTORIES(${Log4Cxx_INCLUDE_DIRS})
+# LINK_DIRECTORIES(${Log4Cxx_LIBRARY_DIRS})
 
-# This defines the variables Boost_LIBRARIES that containts all library names
-# that we need to link into the program.
-# find_package(Boost 1.36.0 COMPONENTS filesystem system REQUIRED)
+FIND_PACKAGE (UnitTestPlusPlus REQUIRED)
+INCLUDE_DIRECTORIES(${UnitTestPlusPlus_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${UnitTestPlusPlus_INCLUDE_DIRS})
+LINK_DIRECTORIES(${UnitTestPlusPlus_LIBRARY_DIRS})
+LINK_DIRECTORIES("${MAINFOLDER}/lib")
 
-# target_link_libraries(example PUBLIC
-#  ${Boost_LIBRARIES}
-#  # here you can add any library dependencies
-#)
+
+#
+# Special hack for switching to 32-bit mode on Snow
+# Leopard if Qt has been compiled for 32-bit, only.
+#
+# IF (APPLE)
+#    IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+#       EXECUTE_PROCESS(
+# 		COMMAND file "${QT_QTCORE_LIBRARY}"
+# 		COMMAND grep "x86_64" -c
+# 		OUTPUT_VARIABLE QT4_SUPPORTS_X86_64_OUTPUT
+#       )
+#       IF (NOT QT4_SUPPORTS_X86_64_OUTPUT MATCHES "0")
+#           SET(QT4_SUPPORTS_X86_64 1)
+#       ELSE (NOT QT4_SUPPORTS_X86_64_OUTPUT MATCHES "0")
+#           SET(QT4_SUPPORTS_X86_64 0)
+#       ENDIF (NOT QT4_SUPPORTS_X86_64_OUTPUT MATCHES "0")
+#
+#       IF (QT4_SUPPORTS_X86_64)
+#           SET(CMAKE_OSX_ARCHITECTURES x86_64)
+#       ELSE (QT4_SUPPORTS_X86_64)
+#           SET(CMAKE_OSX_ARCHITECTURES i386)
+#       ENDIF (QT4_SUPPORTS_X86_64)
+#    ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+# ENDIF (APPLE)
+
+
+#
+# Configure Files
+#
+FILE (GLOB_RECURSE CONFIGINPUTS1 include/*.in.h.cmake)
+FILE (GLOB_RECURSE CONFIGINPUTS2 include/*.h.in.cmake)
+FILE (GLOB_RECURSE CONFIGINPUTS3 src/*.in.h.cmake)
+FILE (GLOB_RECURSE CONFIGINPUTS4 src/*.h.in.cmake)
+FILE (GLOB_RECURSE CONFIGINPUTS5 test/*.in.h.cmake)
+FILE (GLOB_RECURSE CONFIGINPUTS6 test/*.h.in.cmake)
+LIST (APPEND CONFIGINPUTS "${CONFIGINPUTS1}")
+LIST (APPEND CONFIGINPUTS "${CONFIGINPUTS2}")
+LIST (APPEND CONFIGINPUTS "${CONFIGINPUTS3}")
+LIST (APPEND CONFIGINPUTS "${CONFIGINPUTS4}")
+LIST (APPEND CONFIGINPUTS "${CONFIGINPUTS5}")
+LIST (APPEND CONFIGINPUTS "${CONFIGINPUTS6}")
+FOREACH (CONFIGINPUT ${CONFIGINPUTS})
+    STRING (REPLACE ".in.h.cmake" ".h" CONFIGOUTPUT1 "${CONFIGINPUT}")
+    STRING (REPLACE ".h.in.cmake" ".h" CONFIGOUTPUT2 "${CONFIGOUTPUT1}")
+    CONFIGURE_FILE ("${CONFIGINPUT}" "${CONFIGOUTPUT2}")
+ENDFOREACH (CONFIGINPUT ${CONFIGINPUTS})
+
+#
+# Add Build Targets
+#
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(test)
+
+#
+# Add Install Targets
+#
+IF (EXISTS "${MAINFOLDER}/include/${PROJECT_NAME}" AND IS_DIRECTORY "${MAINFOLDER}/include/${PROJECT_NAME}")
+    INSTALL(DIRECTORY "${MAINFOLDER}/include/${PROJECT_NAME}" DESTINATION "include")
+ENDIF (EXISTS "${MAINFOLDER}/include/${PROJECT_NAME}" AND IS_DIRECTORY "${MAINFOLDER}/include/${PROJECT_NAME}")
+
+#
+# Add Documentation Targets
+#
+INCLUDE (DocumentationTargets)
