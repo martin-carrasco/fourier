@@ -16,6 +16,6 @@ void save_img(std::vector< std::vector< cn > > vec);
 
 std::vector<std::vector<cn>> load_img(std::string filename);
 
-void img_transform(std::vector<std::vector<cn>> matrix);
+std::vector<std::vector<cn>> img_transform(std::vector<std::vector<cn>> matrix);
 
 #endif

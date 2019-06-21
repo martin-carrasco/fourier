@@ -5,7 +5,7 @@ using namespace std;
 
 void generate_csv(){
   Img image = cv::imread(FILENAME, cv::IMREAD_GRAYSCALE);
-  fstream file(OUTPUTFILE, ios::out);
+  fstream file(OUTPUT_FILE, ios::out);
   file << cv::format(image, cv::Formatter::FMT_CSV);
   file.close();
 }
@@ -17,7 +17,7 @@ void display_csv(){
   string current_line;
 
   // vector allows you to add data without knowing the exact size beforehand
-  svector<vector<int>> all_data;
+  vector<vector<int>> all_data;
 
   // Start reading lines as long as there are lines in the file
   while (getline(inputfile, current_line)) {

@@ -1,4 +1,5 @@
 #include "../include/image_manager.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -61,10 +62,10 @@ vector< vector<cn> > load_img(string filename)
 }
 
 void save_img(vector< vector<cn> > vec){
-    ofstream f_out("../input/input.txt")
+    ofstream f_out("../input/input.txt");
     for(auto row : vec){
         for(auto col : row){
-            f_out << real(row) << ",";
+            f_out << real(col) << ",";
         }
         cout << endl;
     }
@@ -80,7 +81,7 @@ vector< vector<cn> > img_transform(vector<vector<cn>> matrix)
     int Q = height * 2;
 
     //Zero pad image for P = 2W, P = 2H so P x Q = IMG
-    vector < vector<cn> rows(width * 2, vector<vector<cn>> c(2 * height));
+    vector < vector<cn>> rows(P, vector<cn>(Q, 0));
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
@@ -96,13 +97,13 @@ vector< vector<cn> > img_transform(vector<vector<cn>> matrix)
     }
 
     //2D FFT
-    2dfft(complex_math, P, Q);
+    fft2d(rows, P, Q);
 
     //Make filter h(x, y) for P x Q
-    vector<vector<int>> filter_mask = low_pass_filter(P, Q, 3);
+    vector<vector<cn>> filter_mask = low_pass_filter(P, Q, 3);
 
     //2D FFT to make H(x, y) from h(x, y)
-    2dfft(filter_mask, P, Q);
+    fft2d(filter_mask, P, Q);
 
     //Center H(x, y) to (P/2, Q/2) - multiply by (-1)^x+y
     for (int x = 0; x < P; x++) {
@@ -119,7 +120,7 @@ vector< vector<cn> > img_transform(vector<vector<cn>> matrix)
     }
 
     //Inverse 2D FFT
-    i2dfft(rows, P, Q);
+    ifft2d(rows, P, Q);
 
     //Crop back
     

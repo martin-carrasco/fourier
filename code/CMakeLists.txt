@@ -10,12 +10,11 @@ project(Project)            # this sets the project name
 # `libs`.
 file(GLOB_RECURSE libs      lib/*.cpp)
 file(GLOB_RECURSE includes      include/*.h)
-set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wfloat-conversion")
+set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wfloat-conversion -g")
 #set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules)
 
-find_package(OpenCV REQUIRED)
 # You can use set(sources src/main.cpp) etc if you don't want to
 # use globbing to find files automatically.
 
@@ -27,10 +26,11 @@ find_package(OpenCV REQUIRED)
 # files are invisible when they are not explicitly part of the project.
 message( ${libs} )
 message( ${includes} )
-add_executable(project src/main.cpp ${libs} ${includes})
+add_executable(${PROJECT_NAME} src/main.cpp ${libs} ${includes})
 
+find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
-link_libraries(Project ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 # Just for example add some compiler flags.
 # target_compile_options(project PUBLIC -std=c++17 -Wall -Wfloat-conversion)
 
