@@ -4,6 +4,4 @@ keynotes/package-lock.json
 */*/.DS_Store
 keynotes/dist/*
 */CMakeFiles/
-*/*.o
-*/*.cmake
-*/*.txt
+*/CMakeCache.txt
