@@ -47,13 +47,12 @@ vector< vector<cn> > load_img(string filename)
 
     while (getline(file, line)) {
         vector<cn> col;
+        replace(line.begin(), line.end(), ',', ' ');
         stringstream ss(line);
-        int tmp_int;
 
+        int tmp_int;
         while (ss >> tmp_int) {
             col.push_back(tmp_int);
-            if (ss.peek(','))
-                ss.ignore();
         }
         rows.push_back(col);
     }
