@@ -5,6 +5,11 @@ using namespace std;
 
 void generate_csv(){
   Img image = cv::imread(FILENAME, cv::IMREAD_GRAYSCALE);
+
+  //cv::namedWindow("Image", cv::WINDOW_NORMAL);
+  //cv::imshow("Image", image);
+  //cv::waitKey(0);
+
   fstream file(OUTPUT_FILE, ios::out);
   file << cv::format(image, cv::Formatter::FMT_CSV);
   file.close();
@@ -24,12 +29,13 @@ void display_csv(){
 
     // Now inside each line we need to seperate the cols
     vector<int> values;
+    replace(current_line.begin(), current_line.end(), ',', ' ');
     stringstream temp(current_line);
-    string single_value;
-    while (getline(temp, single_value, ',')) {
+    int holder;
+    while (temp >> holder) {
 
       // convert the string element to a integer value
-      values.push_back(atoi(single_value.c_str()));
+      values.push_back(holder);
     }
 
     // add the row to the complete data vector

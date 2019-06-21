@@ -11,9 +11,9 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#define FILENAME "../input/lenna.png"
-#define OUTPUT_FILE "../output/output.txt"
-#define INPUT_FILE "../input/input.txt"
+#define FILENAME "input/lena.png"
+#define OUTPUT_FILE "output/output.txt"
+#define INPUT_FILE "input/input.txt"
 
 typedef cv::Mat Img;
 

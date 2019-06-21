@@ -12,10 +12,6 @@ float dist_e(int cx, int cy, int px, int py)
 vector<vector<cn>> low_pass_filter(int width, int height, int d0)
 {
     vector<vector<cn>> rows(width, vector<cn>(height, 0));
-    for (auto row : rows) {
-        vector<cn> col(height, 0);
-        rows.push_back(col);
-    }
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
@@ -62,12 +58,15 @@ vector< vector<cn> > load_img(string filename)
 }
 
 void save_img(vector< vector<cn> > vec){
-    ofstream f_out("../input/input.txt");
-    for(auto row : vec){
-        for(auto col : row){
-            f_out << real(col) << ",";
+    ofstream f_out("input/input.txt");
+
+    for(auto it = vec.begin();it != vec.end();it++){
+        for(auto val = (*it).begin();val != (*it).end();val++){
+            f_out << real(*val);
+            if(val+1 != (*it).end())
+                f_out << ",";
         }
-        cout << endl;
+        f_out << endl;
     }
     f_out.close();
 }
@@ -100,10 +99,8 @@ vector< vector<cn> > img_transform(vector<vector<cn>> matrix)
     fft2d(rows, P, Q);
 
     //Make filter h(x, y) for P x Q
-    vector<vector<cn>> filter_mask = low_pass_filter(P, Q, 3);
+    vector<vector<cn>> filter_mask = low_pass_filter(P, Q, 5);
 
-    //2D FFT to make H(x, y) from h(x, y)
-    fft2d(filter_mask, P, Q);
 
     //Center H(x, y) to (P/2, Q/2) - multiply by (-1)^x+y
     for (int x = 0; x < P; x++) {
@@ -112,9 +109,12 @@ vector< vector<cn> > img_transform(vector<vector<cn>> matrix)
         }
     }
 
+    //2D FFT to make H(x, y) from h(x, y)
+    fft2d(filter_mask, P, Q);
+
     //Apply the filter H(x, y) to F(x, y) (multiply)
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+    for (int x = 0; x < P; x++) {
+        for (int y = 0; y < Q; y++) {
             rows[x][y] = rows[x][y] * filter_mask[x][y];
         }
     }
