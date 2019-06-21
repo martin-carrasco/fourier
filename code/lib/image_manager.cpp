@@ -6,7 +6,7 @@
 #include <vector>
 
 using namespace std;
-
+/*
 float dist_e(int cx, int cy, int px, int py)
 {
     return sqrt(
@@ -113,3 +113,4 @@ void img_transform(vector<vector<cn>> matrix)
 
     //Crop back
 }
+*/

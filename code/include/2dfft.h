@@ -7,6 +7,5 @@
 
 void p(std::vector<std::vector<cn>> vec);
 
-void fft2d(std::vector<std::vector<cn>>& matrix, int m, int n);
 
 #endif
