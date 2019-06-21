@@ -1,8 +1,4 @@
 #include "../include/image_manager.h"
-#include <cmath>
-#include <fstream>
-#include <sstream>
-#include <vector>
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#ifdef __OPENCV_MANAGER_H__
+#ifndef __OPENCV_MANAGER_H__
 #define __OPENCV_MANAGER_H__
 
 #include <fstream>

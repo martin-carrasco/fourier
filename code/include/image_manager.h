@@ -1,7 +1,12 @@
-#ifdef __IMAGE_MANAGER_H__
+#ifndef __IMAGE_MANAGER_H__
 #define __IMAGE_MANAGER_H__
 
 #include "../include/2dfft.h"
+
+#include <cmath>
+#include <fstream>
+#include <sstream>
+#include <vector>
 
 float dist_e(int cx, int cy, int px, int py);
 
