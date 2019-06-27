@@ -1,4 +1,4 @@
-#include <UnitTest++/UnitTest++.h>
+#include <unittest++/UnitTest++.h>
 /*
  * This file provides a transitive include for the UnitTest++ library
  * so that you don't need to remember how to include it yourself. This

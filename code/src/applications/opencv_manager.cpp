@@ -14,9 +14,9 @@ void generate_csv()
 void display_csv()
 {
     // Read CSV
-    // Source: https://answers.opencv.org/question/55210/reading-csv-file-in-opencv/
-    fstream inputfile(INPUT_FILE, ios::in);
-    string current_line;
+    // Source:
+https://answers.opencv.org/question/55210/reading-csv-file-in-opencv/ fstream
+inputfile(INPUT_FILE, ios::in); string current_line;
 
     // vector allows you to add data without knowing the exact size beforehand
     vector<vector<int>> all_data;
@@ -40,7 +40,8 @@ void display_csv()
     inputfile.close();
 
     // Now add all the data into a Mat element
-    Img vect = Img::zeros((int)all_data.size(), (int)all_data[0].size(), CV_8UC1);
+    Img vect = Img::zeros((int)all_data.size(), (int)all_data[0].size(),
+CV_8UC1);
 
     // Loop over vectors and add the data
     for (int rows = 0; rows < all_data.size(); rows++) {

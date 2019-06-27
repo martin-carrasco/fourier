@@ -1,10 +1,10 @@
 FILE (GLOB_RECURSE project_SRCS *.cpp *.cxx *.cc *.C *.c *.h *.hpp)
 SET (project_MOC_HEADERS app.h)
 # SET (project_LIBS ${Boost_LIBRARIES} ${QT_LIBRARIES} ${Log4Cxx_LIBRARIES})
-SET (project_LIBS  ${Portaudio_LIBRARIES} ${OPENCV_LIBRARIES})
+SET (project_LIBS  ${SFMLaudio_LIBRARIES} ${SFMLsystem_LIBRARIES} ${OPENCV_LIBRARIES})
 
 SET (project_BIN ${PROJECT_NAME})
-SET (CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wfloat-conversion")
+SET (CMAKE_CXX_FLAGS "-g -std=c++17 -Wall -Wfloat-conversion")
 
 # QT4_WRAP_CPP(project_MOC_SRCS_GENERATED ${project_MOC_HEADERS})
 ADD_EXECUTABLE(${project_BIN} ${project_SRCS} ${project_MOC_SRCS_GENERATED})
