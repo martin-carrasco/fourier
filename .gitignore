@@ -3,8 +3,7 @@ keynotes/package-lock.json
 .DS_Store
 */*/.DS_Store
 keynotes/dist/*
-*/CMakeFiles/
-*/CMakeCache.txt
+!/**/.gitkeep
 
 code/Makefile
 code/Project
@@ -83,7 +82,20 @@ code/cmake_install.cmake
 # .idea/modules
 
 # CMake
-cmake-build-*/
+**/cmake-build-*/
+**/CMakeLists.txt.user
+**/CMakeCache.txt
+**/CMakeFiles
+**/CMakeScripts
+**/Testing
+**/cmake_install.cmake
+**/install_manifest.txt
+**/compile_commands.json
+**/CTestTestfile.cmake
+**/src/CMakeFiles
+**/src/cmake_install.cmake
+**/build/*
+**/bin/*
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
