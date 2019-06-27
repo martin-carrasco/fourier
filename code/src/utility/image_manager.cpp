@@ -1,11 +1,10 @@
 #include <algorithm>
-#include "../include/image_manager.h"
+#include "utility/image_manager.h"
 
 using namespace std;
 
 float dist_e(int cx, int cy, int px, int py) {
   return sqrt(pow(cx - px, 2) + pow(cy - py, 2));
-
 }
 bool cmp_complex(cn a, cn b) { return real(a) < real(b); }
 
@@ -74,23 +73,20 @@ vector<vector<cn>> low_pass_filter(int width, int height, int d0) {
   }
   return rows;
 }
- 
-vector< vector<cn> > load_img(string filename)
-{
-    ifstream file(filename);
-    string line;
-    vector<vector<cn>> rows;
 
-    while (getline(file, line)) {
-        vector<cn> col;
-        replace(line.begin(), line.end(), ',', ' ');
-        stringstream ss(line);
+vector<vector<cn>> load_img(string filename) {
+  ifstream file(filename);
+  string line;
+  vector<vector<cn>> rows;
 
-        int tmp_int;
-        while (ss >> tmp_int) {
-            col.push_back(tmp_int);
-        }
-        rows.push_back(col);
+  while (getline(file, line)) {
+    vector<cn> col;
+    replace(line.begin(), line.end(), ',', ' ');
+    stringstream ss(line);
+
+    int tmp_int;
+    while (ss >> tmp_int) {
+      col.push_back(tmp_int);
     }
     rows.push_back(col);
   }
@@ -98,14 +94,13 @@ vector< vector<cn> > load_img(string filename)
   return rows;
 }
 
+void save_img(vector<vector<cn>> vec) {
+  ofstream f_out("input/input.txt");
 
-void save_img(vector< vector<cn> > vec){
-    ofstream f_out("../input/input.txt");
-    for(auto row : vec){
-        for(auto col : row){
-            f_out << real(col) << ",";
-        }
-        cout << endl;
+  for (auto it = vec.begin(); it != vec.end(); it++) {
+    for (auto val = (*it).begin(); val != (*it).end(); val++) {
+      f_out << real(*val);
+      if (val + 1 != (*it).end()) f_out << ",";
     }
     f_out << endl;
   }
@@ -120,9 +115,8 @@ vector<vector<cn>> img_transform(vector<vector<cn>> matrix) {
   int P = width * 2;
   int Q = height * 2;
 
-
-    //Zero pad image for P = 2W, P = 2H so P x Q = IMG
-    vector < vector<cn>> rows(P, vector<cn>(Q, 0));
+  // Zero pad image for P = 2W, P = 2H so P x Q = IMG
+  vector<vector<cn>> rows(P, vector<cn>(Q, 0));
 
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
@@ -138,14 +132,13 @@ vector<vector<cn>> img_transform(vector<vector<cn>> matrix) {
       rows[x][y] = rows[x][y] * pow(-1, x + y);
     }
   }
-    //2D FFT
-    fft2d(rows, P, Q);
 
-    //Make filter h(x, y) for P x Q
-    vector<vector<cn>> filter_mask = low_pass_filter(P, Q, 3);
+  // 2D FFT
+  fft2d(rows, P, Q);
 
-    //2D FFT to make H(x, y) from h(x, y)
-    fft2d(filter_mask, P, Q);
+
+  //Zero Pad mask
+  vector<vector<cn>> mask(P, vector<cn>(Q, 0));
 
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
@@ -177,9 +170,7 @@ vector<vector<cn>> img_transform(vector<vector<cn>> matrix) {
   // Inverse 2D FFT
   ifft2d(rows, P, Q);
 
-    //Inverse 2D FFT
-    ifft2d(rows, P, Q);
+  // Crop back
 
   return rows;
 }
-

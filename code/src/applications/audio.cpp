@@ -9,6 +9,7 @@
 
 using namespace std;
 
+/*
 int main(int argc, const char* argv[]) {
   // first check if an input audio device is available on the system
   std::string cmd;
@@ -64,3 +65,4 @@ int main(int argc, const char* argv[]) {
 
   return 0;
 }
+*/

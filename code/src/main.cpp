@@ -1,5 +1,5 @@
-#include "../include/image_manager.h"
-#include "../include/opencv_manager.h"
+#include "utility/image_manager.h"
+#include "utility/opencv_manager.h"
 #include <vector>
 
 using namespace std;
