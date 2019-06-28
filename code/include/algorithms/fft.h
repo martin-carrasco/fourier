@@ -11,8 +11,8 @@
 
 
 // Base function
-std::vector<cn> _recursive_fft(const std::vector<cn>& a, bool inverse);
-void _fft2d(std::vector<std::vector<cn>>& matrix, int m, int n, bool inverse);
+std::vector<RGBA_Complex> _recursive_fft(const std::vector<RGBA_Complex>& a, bool inverse);
+void _fft2d(std::vector<std::vector<RGBA_Complex>>& matrix, int m, int n, bool inverse);
 
 
 #endif

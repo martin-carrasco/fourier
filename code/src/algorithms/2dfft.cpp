@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void p(vector<vector<cn>> vec)
+void p(vector<vector<RGBA_Complex>> vec)
 {
     for (auto layer_1 : vec) {
         for (auto comp_num : layer_1)
@@ -12,13 +12,13 @@ void p(vector<vector<cn>> vec)
     cout << endl;
 }
 
-void _fft2d(vector<vector<cn>>& matrix, int m, int n, bool inverse)
+void _fft2d(vector<vector<RGBA_Complex>>& matrix, int m, int n, bool inverse)
 {
     for (int r = 0; r < m; r++) {
         matrix[r] = _recursive_fft(matrix[r], inverse); // R * O(R log R)
     }
 
-    vector<cn> t; //(Real, Complex) representation of the transform made on the columns
+    vector<RGBA_Complex> t; //(Real, Complex) representation of the transform made on the columns
 
     for (int c = 0; c < n; c++) { //C
 

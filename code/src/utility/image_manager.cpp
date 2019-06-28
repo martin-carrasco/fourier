@@ -3,14 +3,82 @@
 
 using namespace std;
 
-float dist_e(int cx, int cy, int px, int py) {
-  return sqrt(pow(cx - px, 2) + pow(cy - py, 2));
-}
-bool cmp_complex(cn a, cn b) { return real(a) < real(b); }
+ImageTransform::ImageTransform(void){}
 
-vector<vector<cn>> median_filter(vector<vector<cn>> vec, int width, int height,
-                                 int d0) {
-  vector<vector<cn>> rows = vec;
+ImageTransform::ImageTransform(vector< vector< cn > > matrix){
+    this->complex_matrix = matrix;
+}   
+ImageTransform::ImageTransform(vector< vector< double > > matrix){
+    //TODO Convert double matrix to complex matrix
+}
+
+
+void ImageTransform::apply_transform(ImageFilter* filter){
+
+    int width = this->complex_matrix.size();
+    int height = this->complex_matrix[0].size();
+
+    int P = width * 2;
+    int Q = height * 2;
+
+
+    // Zero pad image for P = 2W, P = 2H so P x Q = IMG
+    vector<vector<cn>> rows = ImageUtils::pad0_complex(this->complex_matrix, width, height);
+
+    //Make zero padded copy of image and make filter
+    vector< vector< cn > > image_filter = filter->make_filter(rows, P, Q, 3);
+    
+
+    //// Multiply by (-1)^x+y to center it to u = P / 2 and v Q / 2 where u and v
+    //// are center coordinates
+    //ImageUtils::center_matrix(image_filter);
+
+    //// Multiply by (-1)^x+y to center it to u = P / 2 and v Q / 2 where u and v
+    //// are center coordinates
+    //ImageUtils::center_matrix(rows);
+
+    // 2D FFT
+    fft2d(rows, P, Q);
+
+    //2D FFT on filter
+    fft2d(image_filter, P, Q);
+
+    // Apply the filter H(x, y) to F(x, y) (multiply)
+    for (int x = 0; x < P; x++) {
+        for (int y = 0; y < Q; y++) {
+            rows[x][y] = rows[x][y] * image_filter[x][y];
+        }
+    }
+    
+    // Inverse 2D FFT
+    ifft2d(rows, P, Q);
+
+
+    //Crop back
+    for(int x = 0;x < P;x++){
+        for(int y = 0;y < Q;y++){
+            this->complex_matrix[x][y] = rows[x][y];
+        }
+    } 
+    
+    this->complex_matrix = rows;
+}
+
+void ImageTransform::set_matrix(vector< vector< cn > > matrix){
+    this->complex_matrix = matrix;
+}
+void ImageTransform::set_matrix(vector< vector< double > > matrix){
+    //TODO Convert double to cn matrix 
+}
+
+vector< vector< cn > > ImageTransform::get_matrix(void){
+    return this->complex_matrix;
+}
+
+
+vector< vector< cn > > ImageMedianFilter::make_filter(vector< vector< cn > > matrix, int width, int height, int d0){
+
+  vector<vector<cn>> rows = matrix;
 
   int n_cuad_cols = height / d0;
   int n_cuad_rows = width / d0;
@@ -30,7 +98,7 @@ vector<vector<cn>> median_filter(vector<vector<cn>> vec, int width, int height,
         cuad.push_back(rows[x][y]);
       }
 
-      sort(cuad.begin(), cuad.end(), cmp_complex);
+      sort(cuad.begin(), cuad.end(), ImageUtils::cmp_rgba);
 
       if(cuad.empty())
           continue;
@@ -48,7 +116,8 @@ vector<vector<cn>> median_filter(vector<vector<cn>> vec, int width, int height,
   }
   return rows;
 }
-vector<vector<cn>> low_pass_filter(int width, int height, int d0) {
+
+vector< vector< cn > > ImageLowFilter::make_filter(vector< vector< cn > > matrix, int width, int height, int d0){
   vector<vector<cn>> rows(width, vector<cn>(height, 0));
 
   for (int x = 0; x < width; x++) {
@@ -64,7 +133,7 @@ vector<vector<cn>> low_pass_filter(int width, int height, int d0) {
       cent_x = floor(x / (width / ncx)) * ncx + ceil((width / ncx) / 2);
       cent_y = floor(y / (height / ncy)) * ncy + ceil((height / ncy) / 2);
 
-      if (dist_e(cent_x, cent_y, x, y) <= d0) {
+      if (ImageUtils::dist_euclid(cent_x, cent_y, x, y) <= d0) {
         rows[x][y] = 1;
       } else {
         rows[x][y] = 0;
@@ -74,103 +143,24 @@ vector<vector<cn>> low_pass_filter(int width, int height, int d0) {
   return rows;
 }
 
-vector<vector<cn>> load_img(string filename) {
-  ifstream file(filename);
-  string line;
-  vector<vector<cn>> rows;
+//vector<vector<cn>> load_img(string filename) {
+  //ifstream file(filename);
+  //string line;
+  //vector<vector<cn>> rows;
 
-  while (getline(file, line)) {
-    vector<cn> col;
-    replace(line.begin(), line.end(), ',', ' ');
-    stringstream ss(line);
+  //while (getline(file, line)) {
+    //vector<cn> col;
+    //replace(line.begin(), line.end(), ',', ' ');
+    //stringstream ss(line);
 
-    int tmp_int;
-    while (ss >> tmp_int) {
-      col.push_back(tmp_int);
-    }
-    rows.push_back(col);
-  }
-  file.close();
-  return rows;
-}
-
-void save_img(vector<vector<cn>> vec) {
-  ofstream f_out("input/input.txt");
-
-  for (auto it = vec.begin(); it != vec.end(); it++) {
-    for (auto val = (*it).begin(); val != (*it).end(); val++) {
-      f_out << real(*val);
-      if (val + 1 != (*it).end()) f_out << ",";
-    }
-    f_out << endl;
-  }
-  f_out.close();
-}
-
-vector<vector<cn>> img_transform(vector<vector<cn>> matrix) {
-  
-  int width = matrix.size();
-  int height = matrix[0].size();
-
-  int P = width * 2;
-  int Q = height * 2;
-
-  // Zero pad image for P = 2W, P = 2H so P x Q = IMG
-  vector<vector<cn>> rows(P, vector<cn>(Q, 0));
-
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
-      rows[x][y] = matrix[x][y];
-    }
-  }
+    //int tmp_int;
+    //while (ss >> tmp_int) {
+      //col.push_back(tmp_int);
+    //}
+    //rows.push_back(col);
+  //}
+  //file.close();
+  //return rows;
+//}
 
 
-  // Multiply by (-1)^x+y to center it to u = P / 2 and v Q / 2 where u and v
-  // are center coordinates
-  for (int x = 0; x < P; x++) {
-    for (int y = 0; y < Q; y++) {
-      rows[x][y] = rows[x][y] * pow(-1, x + y);
-    }
-  }
-
-  // 2D FFT
-  fft2d(rows, P, Q);
-
-
-  //Zero Pad mask
-  vector<vector<cn>> mask(P, vector<cn>(Q, 0));
-
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
-      mask[x][y] = matrix[x][y];
-    }
-  }
-
-  // Make filter h(x, y) for P x Q
-  // vector<vector<cn>> filter_mask = low_pass_filter(P, Q, 3);
-  vector<vector<cn>> filter_mask = low_pass_filter(P, Q, 3);
-
-  // Center H(x, y) to (P/2, Q/2) - multiply by (-1)^x+y
-  for (int x = 0; x < P; x++) {
-    for (int y = 0; y < Q; y++) {
-      filter_mask[x][y] = filter_mask[x][y] * pow(-1, x + y);
-    }
-  }
-
-  // 2D FFT to make H(x, y) from h(x, y)
-  fft2d(filter_mask, P, Q);
-
-  // Apply the filter H(x, y) to F(x, y) (multiply)
-  for (int x = 0; x < P; x++) {
-    for (int y = 0; y < Q; y++) {
-      rows[x][y] = rows[x][y] * filter_mask[x][y];
-    }
-  }
-
-  // Inverse 2D FFT
-  ifft2d(rows, P, Q);
-
-  // Crop back
-
-  return rows;
-}
