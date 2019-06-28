@@ -51,47 +51,13 @@ RM = /usr/local/Cellar/cmake/3.14.5/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/dgcnz/Downloads/fourier/code
+CMAKE_SOURCE_DIR = /Users/dgcnz/development/utec/ada/fourier/code
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/dgcnz/Downloads/fourier/code
+CMAKE_BINARY_DIR = /Users/dgcnz/development/utec/ada/fourier/code
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/local/Cellar/cmake/3.14.5/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/local/Cellar/cmake/3.14.5/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/local/Cellar/cmake/3.14.5/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/local/Cellar/cmake/3.14.5/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
 
 # Special rule for the target install/strip
 install/strip: preinstall
@@ -127,16 +93,61 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/local/Cellar/cmake/3.14.5/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/local/Cellar/cmake/3.14.5/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/Cellar/cmake/3.14.5/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/Cellar/cmake/3.14.5/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/local/Cellar/cmake/3.14.5/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
+
 # The main all target
 all: cmake_check_build_system
-	cd /Users/dgcnz/Downloads/fourier/code && $(CMAKE_COMMAND) -E cmake_progress_start /Users/dgcnz/Downloads/fourier/code/CMakeFiles /Users/dgcnz/Downloads/fourier/code/src/CMakeFiles/progress.marks
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/dgcnz/Downloads/fourier/code/CMakeFiles 0
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(CMAKE_COMMAND) -E cmake_progress_start /Users/dgcnz/development/utec/ada/fourier/code/CMakeFiles /Users/dgcnz/development/utec/ada/fourier/code/src/CMakeFiles/progress.marks
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/dgcnz/development/utec/ada/fourier/code/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/clean
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -146,33 +157,48 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/dgcnz/Downloads/fourier/code && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
-src/CMakeFiles/projectname.dir/rule:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/projectname.dir/rule
-.PHONY : src/CMakeFiles/projectname.dir/rule
+src/CMakeFiles/image.dir/rule:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/image.dir/rule
+.PHONY : src/CMakeFiles/image.dir/rule
 
 # Convenience name for target.
-projectname: src/CMakeFiles/projectname.dir/rule
+image: src/CMakeFiles/image.dir/rule
 
-.PHONY : projectname
+.PHONY : image
 
 # fast build rule for target.
-projectname/fast:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/build
-.PHONY : projectname/fast
+image/fast:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/build
+.PHONY : image/fast
+
+# Convenience name for target.
+src/CMakeFiles/audio.dir/rule:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audio.dir/rule
+.PHONY : src/CMakeFiles/audio.dir/rule
+
+# Convenience name for target.
+audio: src/CMakeFiles/audio.dir/rule
+
+.PHONY : audio
+
+# fast build rule for target.
+audio/fast:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/build
+.PHONY : audio/fast
 
 algorithms/2dfft.o: algorithms/2dfft.cpp.o
 
@@ -180,7 +206,8 @@ algorithms/2dfft.o: algorithms/2dfft.cpp.o
 
 # target to build an object file
 algorithms/2dfft.cpp.o:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/algorithms/2dfft.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/algorithms/2dfft.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/algorithms/2dfft.cpp.o
 .PHONY : algorithms/2dfft.cpp.o
 
 algorithms/2dfft.i: algorithms/2dfft.cpp.i
@@ -189,7 +216,8 @@ algorithms/2dfft.i: algorithms/2dfft.cpp.i
 
 # target to preprocess a source file
 algorithms/2dfft.cpp.i:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/algorithms/2dfft.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/algorithms/2dfft.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/algorithms/2dfft.cpp.i
 .PHONY : algorithms/2dfft.cpp.i
 
 algorithms/2dfft.s: algorithms/2dfft.cpp.s
@@ -198,7 +226,8 @@ algorithms/2dfft.s: algorithms/2dfft.cpp.s
 
 # target to generate assembly for a file
 algorithms/2dfft.cpp.s:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/algorithms/2dfft.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/algorithms/2dfft.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/algorithms/2dfft.cpp.s
 .PHONY : algorithms/2dfft.cpp.s
 
 algorithms/fft.o: algorithms/fft.cpp.o
@@ -207,7 +236,8 @@ algorithms/fft.o: algorithms/fft.cpp.o
 
 # target to build an object file
 algorithms/fft.cpp.o:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/algorithms/fft.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/algorithms/fft.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/algorithms/fft.cpp.o
 .PHONY : algorithms/fft.cpp.o
 
 algorithms/fft.i: algorithms/fft.cpp.i
@@ -216,7 +246,8 @@ algorithms/fft.i: algorithms/fft.cpp.i
 
 # target to preprocess a source file
 algorithms/fft.cpp.i:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/algorithms/fft.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/algorithms/fft.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/algorithms/fft.cpp.i
 .PHONY : algorithms/fft.cpp.i
 
 algorithms/fft.s: algorithms/fft.cpp.s
@@ -225,62 +256,153 @@ algorithms/fft.s: algorithms/fft.cpp.s
 
 # target to generate assembly for a file
 algorithms/fft.cpp.s:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/algorithms/fft.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/algorithms/fft.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/algorithms/fft.cpp.s
 .PHONY : algorithms/fft.cpp.s
 
-applications/audio.o: applications/audio.cpp.o
+applications/fourier_audio.o: applications/fourier_audio.cpp.o
 
-.PHONY : applications/audio.o
-
-# target to build an object file
-applications/audio.cpp.o:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/applications/audio.cpp.o
-.PHONY : applications/audio.cpp.o
-
-applications/audio.i: applications/audio.cpp.i
-
-.PHONY : applications/audio.i
-
-# target to preprocess a source file
-applications/audio.cpp.i:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/applications/audio.cpp.i
-.PHONY : applications/audio.cpp.i
-
-applications/audio.s: applications/audio.cpp.s
-
-.PHONY : applications/audio.s
-
-# target to generate assembly for a file
-applications/audio.cpp.s:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/applications/audio.cpp.s
-.PHONY : applications/audio.cpp.s
-
-main.o: main.cpp.o
-
-.PHONY : main.o
+.PHONY : applications/fourier_audio.o
 
 # target to build an object file
-main.cpp.o:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/main.cpp.o
-.PHONY : main.cpp.o
+applications/fourier_audio.cpp.o:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/applications/fourier_audio.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/applications/fourier_audio.cpp.o
+.PHONY : applications/fourier_audio.cpp.o
 
-main.i: main.cpp.i
+applications/fourier_audio.i: applications/fourier_audio.cpp.i
 
-.PHONY : main.i
+.PHONY : applications/fourier_audio.i
 
 # target to preprocess a source file
-main.cpp.i:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/main.cpp.i
-.PHONY : main.cpp.i
+applications/fourier_audio.cpp.i:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/applications/fourier_audio.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/applications/fourier_audio.cpp.i
+.PHONY : applications/fourier_audio.cpp.i
 
-main.s: main.cpp.s
+applications/fourier_audio.s: applications/fourier_audio.cpp.s
 
-.PHONY : main.s
+.PHONY : applications/fourier_audio.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/main.cpp.s
-.PHONY : main.cpp.s
+applications/fourier_audio.cpp.s:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/applications/fourier_audio.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/applications/fourier_audio.cpp.s
+.PHONY : applications/fourier_audio.cpp.s
+
+applications/sfml_wrapper.o: applications/sfml_wrapper.cpp.o
+
+.PHONY : applications/sfml_wrapper.o
+
+# target to build an object file
+applications/sfml_wrapper.cpp.o:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/applications/sfml_wrapper.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/applications/sfml_wrapper.cpp.o
+.PHONY : applications/sfml_wrapper.cpp.o
+
+applications/sfml_wrapper.i: applications/sfml_wrapper.cpp.i
+
+.PHONY : applications/sfml_wrapper.i
+
+# target to preprocess a source file
+applications/sfml_wrapper.cpp.i:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/applications/sfml_wrapper.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/applications/sfml_wrapper.cpp.i
+.PHONY : applications/sfml_wrapper.cpp.i
+
+applications/sfml_wrapper.s: applications/sfml_wrapper.cpp.s
+
+.PHONY : applications/sfml_wrapper.s
+
+# target to generate assembly for a file
+applications/sfml_wrapper.cpp.s:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/applications/sfml_wrapper.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/applications/sfml_wrapper.cpp.s
+.PHONY : applications/sfml_wrapper.cpp.s
+
+main_audio.o: main_audio.cpp.o
+
+.PHONY : main_audio.o
+
+# target to build an object file
+main_audio.cpp.o:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/main_audio.cpp.o
+.PHONY : main_audio.cpp.o
+
+main_audio.i: main_audio.cpp.i
+
+.PHONY : main_audio.i
+
+# target to preprocess a source file
+main_audio.cpp.i:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/main_audio.cpp.i
+.PHONY : main_audio.cpp.i
+
+main_audio.s: main_audio.cpp.s
+
+.PHONY : main_audio.s
+
+# target to generate assembly for a file
+main_audio.cpp.s:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/main_audio.cpp.s
+.PHONY : main_audio.cpp.s
+
+main_image.o: main_image.cpp.o
+
+.PHONY : main_image.o
+
+# target to build an object file
+main_image.cpp.o:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/main_image.cpp.o
+.PHONY : main_image.cpp.o
+
+main_image.i: main_image.cpp.i
+
+.PHONY : main_image.i
+
+# target to preprocess a source file
+main_image.cpp.i:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/main_image.cpp.i
+.PHONY : main_image.cpp.i
+
+main_image.s: main_image.cpp.s
+
+.PHONY : main_image.s
+
+# target to generate assembly for a file
+main_image.cpp.s:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/main_image.cpp.s
+.PHONY : main_image.cpp.s
+
+utility/audio_wrapper.o: utility/audio_wrapper.cpp.o
+
+.PHONY : utility/audio_wrapper.o
+
+# target to build an object file
+utility/audio_wrapper.cpp.o:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/utility/audio_wrapper.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/utility/audio_wrapper.cpp.o
+.PHONY : utility/audio_wrapper.cpp.o
+
+utility/audio_wrapper.i: utility/audio_wrapper.cpp.i
+
+.PHONY : utility/audio_wrapper.i
+
+# target to preprocess a source file
+utility/audio_wrapper.cpp.i:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/utility/audio_wrapper.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/utility/audio_wrapper.cpp.i
+.PHONY : utility/audio_wrapper.cpp.i
+
+utility/audio_wrapper.s: utility/audio_wrapper.cpp.s
+
+.PHONY : utility/audio_wrapper.s
+
+# target to generate assembly for a file
+utility/audio_wrapper.cpp.s:
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/utility/audio_wrapper.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/utility/audio_wrapper.cpp.s
+.PHONY : utility/audio_wrapper.cpp.s
 
 utility/image_manager.o: utility/image_manager.cpp.o
 
@@ -288,7 +410,8 @@ utility/image_manager.o: utility/image_manager.cpp.o
 
 # target to build an object file
 utility/image_manager.cpp.o:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/utility/image_manager.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/utility/image_manager.cpp.o
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/utility/image_manager.cpp.o
 .PHONY : utility/image_manager.cpp.o
 
 utility/image_manager.i: utility/image_manager.cpp.i
@@ -297,7 +420,8 @@ utility/image_manager.i: utility/image_manager.cpp.i
 
 # target to preprocess a source file
 utility/image_manager.cpp.i:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/utility/image_manager.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/utility/image_manager.cpp.i
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/utility/image_manager.cpp.i
 .PHONY : utility/image_manager.cpp.i
 
 utility/image_manager.s: utility/image_manager.cpp.s
@@ -306,35 +430,9 @@ utility/image_manager.s: utility/image_manager.cpp.s
 
 # target to generate assembly for a file
 utility/image_manager.cpp.s:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/utility/image_manager.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/image.dir/build.make src/CMakeFiles/image.dir/utility/image_manager.cpp.s
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(MAKE) -f src/CMakeFiles/audio.dir/build.make src/CMakeFiles/audio.dir/utility/image_manager.cpp.s
 .PHONY : utility/image_manager.cpp.s
-
-utility/opencv_manager.o: utility/opencv_manager.cpp.o
-
-.PHONY : utility/opencv_manager.o
-
-# target to build an object file
-utility/opencv_manager.cpp.o:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/utility/opencv_manager.cpp.o
-.PHONY : utility/opencv_manager.cpp.o
-
-utility/opencv_manager.i: utility/opencv_manager.cpp.i
-
-.PHONY : utility/opencv_manager.i
-
-# target to preprocess a source file
-utility/opencv_manager.cpp.i:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/utility/opencv_manager.cpp.i
-.PHONY : utility/opencv_manager.cpp.i
-
-utility/opencv_manager.s: utility/opencv_manager.cpp.s
-
-.PHONY : utility/opencv_manager.s
-
-# target to generate assembly for a file
-utility/opencv_manager.cpp.s:
-	cd /Users/dgcnz/Downloads/fourier/code && $(MAKE) -f src/CMakeFiles/projectname.dir/build.make src/CMakeFiles/projectname.dir/utility/opencv_manager.cpp.s
-.PHONY : utility/opencv_manager.cpp.s
 
 # Help Target
 help:
@@ -342,31 +440,39 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install/local"
-	@echo "... rebuild_cache"
-	@echo "... edit_cache"
 	@echo "... install/strip"
 	@echo "... install"
 	@echo "... list_install_components"
-	@echo "... projectname"
+	@echo "... rebuild_cache"
+	@echo "... edit_cache"
+	@echo "... image"
+	@echo "... install/local"
+	@echo "... test"
+	@echo "... audio"
 	@echo "... algorithms/2dfft.o"
 	@echo "... algorithms/2dfft.i"
 	@echo "... algorithms/2dfft.s"
 	@echo "... algorithms/fft.o"
 	@echo "... algorithms/fft.i"
 	@echo "... algorithms/fft.s"
-	@echo "... applications/audio.o"
-	@echo "... applications/audio.i"
-	@echo "... applications/audio.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... applications/fourier_audio.o"
+	@echo "... applications/fourier_audio.i"
+	@echo "... applications/fourier_audio.s"
+	@echo "... applications/sfml_wrapper.o"
+	@echo "... applications/sfml_wrapper.i"
+	@echo "... applications/sfml_wrapper.s"
+	@echo "... main_audio.o"
+	@echo "... main_audio.i"
+	@echo "... main_audio.s"
+	@echo "... main_image.o"
+	@echo "... main_image.i"
+	@echo "... main_image.s"
+	@echo "... utility/audio_wrapper.o"
+	@echo "... utility/audio_wrapper.i"
+	@echo "... utility/audio_wrapper.s"
 	@echo "... utility/image_manager.o"
 	@echo "... utility/image_manager.i"
 	@echo "... utility/image_manager.s"
-	@echo "... utility/opencv_manager.o"
-	@echo "... utility/opencv_manager.i"
-	@echo "... utility/opencv_manager.s"
 .PHONY : help
 
 
@@ -378,6 +484,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/dgcnz/Downloads/fourier/code && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/dgcnz/development/utec/ada/fourier/code && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

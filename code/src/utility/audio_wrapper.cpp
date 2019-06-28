@@ -1,13 +1,49 @@
 #include "algorithms/fft.h"
-#include "utility/types.h"
-#include <SFML/Audio.hpp>
+#include "utility/audio_wrapper.h"
 #include <SFML/Audio/SoundBufferRecorder.hpp>
+#include <boost/python.hpp>
+#include <pygtk/pygtk.h>
+#include <exception>
+#include <gtkmm.h>
 #include <iostream>
-#include <math.h>
-#include <stdio.h>
 #include <string>
+#include "utility/matplotlibcpp.h"
 
+#define AUDIO_PATH "res/audio/"
 using namespace std;
+
+void FourierAudio::readAudio(const std::string path) {
+    std::cout << "Reading audio file from: " << AUDIO_PATH << path << "\n";
+    if (not buffer.loadFromFile(AUDIO_PATH + path))
+        throw std::runtime_error("File " AUDIO_PATH + path +
+                                 " couldn't be found.");
+}
+void FourierAudio::playAudio(void) const {
+    if (buffer.getSampleCount() == 0)
+        throw std::runtime_error("No audio to play.");
+
+    sf::Sound sound(buffer);
+    sound.play();
+    while (sound.getStatus() == sf::Music::Playing)
+        ;
+}
+void FourierAudio::printBuffer(void) const {
+    auto samples = buffer.getSamples();
+    auto count = buffer.getSampleCount();
+
+    for (int i = 0; i < count; ++i) std::cout << samples[i] << " ";
+    std::cout << std::endl;
+}
+
+void FourierAudio::plotSignal(void) const {
+    namespace plt = matplotlibcpp;
+
+    auto raw_samples = buffer.getSamples();
+    auto count = buffer.getSampleCount();
+    vector<auto> samples(raw_samples, raw_samples + count);
+    plt::plot(samples);
+    plt::show();
+}
 
 /*
 int main(int argc, const char* argv[]) {
