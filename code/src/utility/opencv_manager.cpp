@@ -6,9 +6,9 @@ using namespace std;
 void generate_csv(){
   Img image = cv::imread(FILENAME, cv::IMREAD_GRAYSCALE);
 
-  //cv::namedWindow("Image", cv::WINDOW_NORMAL);
-  //cv::imshow("Image", image);
-  //cv::waitKey(0);
+ // cv::namedWindow("Original Image", cv::WINDOW_NORMAL);
+ // cv::imshow("Original Image", image);
+ // cv::waitKey(0);
 
   fstream file(OUTPUT_FILE, ios::out);
   file << cv::format(image, cv::Formatter::FMT_CSV);

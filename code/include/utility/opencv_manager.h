@@ -12,9 +12,9 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
-#define FILENAME "input/lena.png"
-#define OUTPUT_FILE "output/output.txt"
-#define INPUT_FILE "input/input.txt"
+#define FILENAME "res/image/input/lena.png"
+#define OUTPUT_FILE "res/image/output/output.txt"
+#define INPUT_FILE "res/image/input/input.txt"
 
 typedef cv::Mat Img;
 
