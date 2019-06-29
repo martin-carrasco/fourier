@@ -6,7 +6,7 @@ RUN mkdir /app && ls /app
 WORKDIR /app
 COPY . /app
 
-RUN ./configure
+# RUN ./configure
 RUN cmake . && make
 
 WORKDIR /app
