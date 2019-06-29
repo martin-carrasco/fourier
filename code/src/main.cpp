@@ -7,18 +7,12 @@ using namespace std;
 int main(void) {
   vector<vector<cn>> img_matrix = make_2d_array();
 
-  // display_csv(img_matrix);
-
   ImageTransform transformer(img_matrix);
 
-  ImageLowFilter* filter = new ImageLowFilter();
-
-  transformer.apply_transform(filter);
-
-  vector<vector<cn>> trans_matrix = transformer.get_matrix();
+  transformer.apply_lp(0.0);
 
   // save_img(img_matrix);
-  display_csv(trans_matrix);
+  display_csv(img_matrix);
 
   return 0;
 }

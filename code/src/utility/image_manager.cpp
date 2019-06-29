@@ -5,98 +5,79 @@ using namespace std;
 
 ImageTransform::ImageTransform(void) {}
 
-ImageTransform::ImageTransform(vector<vector<cn>> matrix) {
-  this->complex_matrix = matrix;
-}
-ImageTransform::ImageTransform(vector<vector<double>> matrix) {
-  // TODO Convert double matrix to complex matrix
+ImageTransform::ImageTransform(CompMatrix& matrix) {
+  this->complex_matrix(matrix);
 }
 
-void ImageTransform::apply_transform(ImageFilter* filter) {
-  int width = this->complex_matrix.size();
-  int height = this->complex_matrix[0].size();
-
-  int P = width * 2;
-
-  int Q = height * 2;
-
-  // Zero pad image for P = 2W, P = 2H so P x Q = IMG
-  vector<vector<cn>> rows =
-      ImageUtils::pad0_complex(this->complex_matrix, width, height);
-
-  // Make zero padded copy of image and make filter
-  vector<vector<cn>> image_filter = filter->make_filter(rows, P, Q, 3);
-
-  // Multiply by (-1)^x+y to center it to u = P / 2 and v Q / 2 where u and v
-  // are center coordinates
-  ImageUtils::center_matrix(image_filter);
-
-  // Multiply by (-1)^x+y to center it to u = P / 2 and v Q / 2 where u and v
-  // are center coordinates
-  ImageUtils::center_matrix(rows);
-
+void ImageTransform::convolute_filter(CompMatrix& mask, int width, int height) {
   // 2D FFT
-  fft2d(rows, P, Q);
-
-  // 2D FFT on filter
-  fft2d(image_filter, P, Q);
+  fft2d(complex_matrix, width, height);
 
   // Apply the filter H(x, y) to F(x, y) (multiply)
-  for (int x = 0; x < P; x++) {
-    for (int y = 0; y < Q; y++) {
-      rows[x][y] = rows[x][y] * image_filter[x][y];
+  for (int x = 0; x < width; x++) {
+    for (int y = 0; y < height; y++) {
+      complex_matrix[x][y] = complex_matrix[x][y] * mask[x][y];
     }
   }
 
   // Inverse 2D FFT
-  ifft2d(rows, P, Q);
+  ifft2d(complex_matrix, width, height);
 
-  // Crop back
+  // Crop back ????
+  // for (int x = 0; x < width; x++) {
+  // for (int y = 0; y < height; y++) {
+  // this->complex_matrix[x][y] = rows[x][y];
+  //}
+  //}
+}
+
+void ImageTransform::apply_lp(double d0) {
+  int width = this->complex_matrix.size();
+  int height = this->complex_matrix[0].size();
+
+  CompMatrix image_filter(width, vector<cn>(height, 0));
+
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-      this->complex_matrix[x][y] = rows[x][y];
+      double m = (static_cast<double>(x) - static_cast<double>(width) / 2.D) /
+                 static_cast<double>(width);
+      double n = (y - height / 2.D) / static_cast<double>(height);
+
+      double total = sqrt(pow(m, 2) + pow(n, 2));
+
+      if (total < d0)
+        image_filter[x][y] = 1;
+      else
+        image_filter[x][y] = 0;
     }
   }
 
-  // this->complex_matrix = rows;
+  this->convolute_filter(image_filter, width, height);
 }
 
-void ImageTransform::set_matrix(vector<vector<cn>> matrix) {
+void ImageTransform::apply_bp(double fc1, double fc2) {
+  int width = this->complex_matrix.size();
+  int height = this->complex_matrix[0].size();
+
+  CompMatrix image_filter(width, vector<cn>(height, 0));
+
+  for (int x = 0; x < width; x++) {
+    for (int y = 0; y < height; y++) {
+      double m = (static_cast<double>(x) - static_cast<double>(width) / 2.D) /
+                 static_cast<double>(width);
+      double n = (y - height / 2.D) / static_cast<double>(height);
+
+      double total = sqrt(pow(m, 2) + pow(n, 2));
+
+      if (fc1 <= total && total <= fc2)
+        image_filter[x][y] = 0;
+      else
+        image_filter[x][y] = 1;
+    }
+  }
+  this->convolute_filter(image_filter, width, height);
+}
+
+void ImageTransform::set_matrix(CompMatrix& matrix) {
   this->complex_matrix = matrix;
-}
-
-void ImageTransform::set_matrix(vector<vector<double>> matrix) {
-  // TODO Convert double to cn matrix
-}
-
-vector<vector<cn>> ImageTransform::get_matrix(void) {
-  return this->complex_matrix;
-}
-
-vector<vector<cn>> ImageLowFilter::make_filter(vector<vector<cn>> matrix,
-                                               int width, int height, int d0) {
-  vector<vector<cn>> rows(width, vector<cn>(height, 0));
-  int cent_x, cent_y, ncx, ncy;
-
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
-      int ncx, ncy, cx, cy, cent_x, cent_y;
-
-      ncx = width / d0;
-      ncy = height / d0;
-
-      cx = width / ncx;
-      cy = height / ncy;
-
-      cent_x = floor(x / (width / ncx)) * ncx + ceil((width / ncx) / 2);
-      cent_y = floor(y / (height / ncy)) * ncy + ceil((height / ncy) / 2);
-
-      if (ImageUtils::dist_euclid(cent_x, cent_y, x, y) <= d0) {
-        rows[x][y] = 1;
-      } else {
-        rows[x][y] = 0;
-      }
-    }
-  }
-  return rows;
 }
