@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#define FILENAME "res/image/input/lena.jpg"
+#define FILENAME "res/image/input/indian.png"
 #define OUTPUT_FILE "res/image/output/output.txt"
 #define INPUT_FILE "res/image/input/input.txt"
 
