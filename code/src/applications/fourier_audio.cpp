@@ -3,6 +3,6 @@
 void test_audio(void) {
     FourierAudio FA;
     FA.readAudio("linares.ogg");
-    FA.printBuffer();
+    // FA.printBuffer();
     FA.playAudio();
 }

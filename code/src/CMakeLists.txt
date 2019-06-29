@@ -5,7 +5,8 @@ FILE (GLOB_RECURSE utility utility/*.cpp )
 SET (project_SRCS ${algorithms} ${applications} ${utility})
 
 SET (project_MOC_HEADERS app.h)
-SET (project_LIBS  ${SFMLall_LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} ${PYGTK_LIBRARIES} ${GTKMM_LIBRARIES})
+# SET (project_LIBS  ${SFMLall_LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} ${PYGTK_LIBRARIES} ${GTKMM_LIBRARIES})
+SET (project_LIBS  ${SFMLall_LIBRARIES})
 
 SET (bin_audio audio)
 SET (bin_image image)

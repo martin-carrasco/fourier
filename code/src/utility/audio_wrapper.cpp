@@ -1,13 +1,13 @@
 #include "algorithms/fft.h"
 #include "utility/audio_wrapper.h"
+//#include "utility/matplotlibcpp.h"
 #include <SFML/Audio/SoundBufferRecorder.hpp>
-#include <boost/python.hpp>
-#include <pygtk/pygtk.h>
+//#include <boost/python.hpp>
+//#include <pygtk/pygtk.h>
 #include <exception>
-#include <gtkmm.h>
+//#include <gtkmm.h>
 #include <iostream>
 #include <string>
-#include "utility/matplotlibcpp.h"
 
 #define AUDIO_PATH "res/audio/"
 using namespace std;
@@ -34,16 +34,17 @@ void FourierAudio::printBuffer(void) const {
     for (int i = 0; i < count; ++i) std::cout << samples[i] << " ";
     std::cout << std::endl;
 }
-
-void FourierAudio::plotSignal(void) const {
-    namespace plt = matplotlibcpp;
-
-    auto raw_samples = buffer.getSamples();
-    auto count = buffer.getSampleCount();
-    vector<auto> samples(raw_samples, raw_samples + count);
-    plt::plot(samples);
-    plt::show();
-}
+/*
+ * void FourierAudio::plotSignal(void) const {
+ *     namespace plt = matplotlibcpp;
+ *
+ *     auto raw_samples = buffer.getSamples();
+ *     auto count = buffer.getSampleCount();
+ *     vector<auto> samples(raw_samples, raw_samples + count);
+ *     plt::plot(samples);
+ *     plt::show();
+ * }
+ */
 
 /*
 int main(int argc, const char* argv[]) {
