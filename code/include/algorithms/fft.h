@@ -4,6 +4,7 @@
 #include "utility/types.h"
 #include <vector>
 
+
 // Out-of-place
 std::vector<cn> ct_out_fft1d(const std::vector<cn>& a, bool inverse);
 std::vector<cn> dj_out_fft1d(const std::vector<cn>& a, bool inverse);

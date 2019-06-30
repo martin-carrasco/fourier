@@ -67,8 +67,6 @@ void ct_in_fft1d(vector<cn>& a, bool inverse = false) {
 }
 
 vector<cn> dj_out_fft1d(vector<cn>& a, bool inverse = false) {
-    using dfft_arg = vector<cn>;
-
     return dfft1d(a, inverse ? dj::dfft_dir::DIR_BWD : dj::dfft_dir::DIR_FWD);
 }
 
@@ -96,21 +94,24 @@ void ct_fft_inplace_helper(vector<cn>::iterator begin, vector<cn>::iterator end,
 */
 
 void ct_in_fft2d(vector<vector<cn>>& matrix, bool inverse) {
-    for (int r = 0; r < m; r++)
+    int rows = matrix.size();
+    int cols = matrix[0].size();
+
+    for (int r = 0; r < rows; r++)
         ct_in_fft1d(matrix[r], inverse);  // R * O(R log R)
 
     vector<cn> t;  //(Real, Complex) representation of the transform made on the
                    // columns
 
-    for (int c = 0; c < n; c++) {  // C
+    for (int c = 0; c < cols; c++) {  // C
 
-        for (int r = 0; r < m; r++) {  // O(R)
+        for (int r = 0; r < rows; r++) {  // O(R)
             t.push_back(matrix[r][c]);
         }
 
         ct_in_fft1d(t, inverse);  // O(C log C)
 
-        for (int r = 0; r < m; r++) {  // O(R)
+        for (int r = 0; r < rows; r++) {  // O(R)
             matrix[r][c] = t[r];
         }
         t.clear();
@@ -118,12 +119,8 @@ void ct_in_fft2d(vector<vector<cn>>& matrix, bool inverse) {
     }
 }
 
-dfft_arg<T> dfft2d(const dfft_arg<T>& xi, const dfft_dir& dir);
-
 vector<vector<cn>> dj_out_fft2d(const vector<vector<cn>>& a,
                                 bool inverse = false) {
-    using dfft_arg = vector<cn>;
-
     int N = a.size();
     vector<cn> temp(N, 0);
     vector<vector<cn>> res(N, vector<cn>(N, 0));
@@ -133,8 +130,8 @@ vector<vector<cn>> dj_out_fft2d(const vector<vector<cn>>& a,
             temp[j + N * i] = a[i][j];  // set element (i, j)
         }
     }
-    auto temp = dj::dfft2d(
-        temp, inverse ? dj::dfft_dir::DIR_BWD : dj::dfft_dir::DIR_FWD);
+    temp = dj::dfft2d(temp,
+                      inverse ? dj::dfft_dir::DIR_BWD : dj::dfft_dir::DIR_FWD);
 
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {

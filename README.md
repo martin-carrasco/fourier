@@ -2,50 +2,17 @@
 
 ## Concepts to be reviewed
 
-+ Time vs Frequency Domains
-+ Harmonics of a wave
-+ The Delta function
-+ Trigonometry
-    + Euler's identity/formula
-    + Usage of complex numbers to represent rotations
-    + Trigonometric identities
-+ Linear algebra
-    + Basis functions
-    + Eigenvalues
-    + Orthogonality (very important)
-    + Convolution of functions
-    + Kernels
-    + Spectral theory
-
-
-## Applications
-
-+ Noise reduction in images
-+ Noise reduction in sound
-+ Signal decomposition
-+ Chord extraction (needs ML or Statistic Model)
-
 ## FAQ
 
-+ What is the difference between Fourier Series and Fourier Transform?
-    + _A Fourier Transform is a way to move from one domain to another to simplify the calculations of an functions. While a Fourier Series is a way to divide a function in all of its sinusoidal compontents. Also a Fourier Transform is aperiodic while a Fourier Series is periodic (* 1 / T)_ 
-+ What is signal processing?
-    + _"Signal processing deals with the representation, transformation, and manipulation of signals and the informatioon the signals contain."_ (Oppenheim 2000)
-+ What is an analog signal?
-    + It's another name for a _continuous signal_.
-+ What is an digital signal?
-    + It's another name for a _discrete signal_.
-+ What is the difference between multiplication and convolution?
-    + Multiplication in your first sentence is term-by-term multiplication: $z[n] = x[n]y[n]$ for all $n$.
-    + Convolution, for discrete-time sequences, is equivalent to polynomial multiplication which is not the same as the term-by-term multiplication. Convolution also requires a lot more calculation: typically $N^2$ multiplications for sequences of length $N$ instead of the $N$ multiplications of the term-by-term multiplication.
-+ How does the Fourier Transform relate to polynomial multiplication (convolution)
-    + The key point of Fourier analysis is that term-by-term multiplication in one domain is the same as convolution in the other domain. So, in order to calculate the results of a convolution, you can either do it directly, using $N^2$ multiplications, or transform to the other domain, do a term-by-term multiplication, and transform back. This requires two transformations to go from one domain to the other, $N$ multiplications in the other domain, and one inverse transformation to come back to
-        the domain where the convolution result is needed. This more complicated process can, in fact, require less computation because the transformations can be done very efficiently via the Fast Fourier Transform (FFT) algorithm which requires about $NlogN$  multiplications. So, compare the computational effort in calculating the three transforms and doing the term-by-term multiplication to $N^2$ to see if the FFT gives you a more efficient method of computing a convolution.
++ [Fourier](./docs/fourier.md)
++ [Signal Processing](./docs/signalproc.md)
 
 ## Useful resources
 
 + [3blue1brown. _But, what is a Fourier Transform?_](https://www.youtube.com/watch?v=spUNpyF58BY)
     + For an intuition of Fourier Transforms (recommended by dgcnz).
++ [Osgood, Brad. _The Fourier Transform and its Applications_](https://see.stanford.edu/materials/lsoftaee261/book-fall-07.pdf)
+    + Tremendously comprehensive lecture notes from MIT's Brad Osgood.
 + [Math.StackExchange. _How is the Fourier Transform Linear?_](https://math.stackexchange.com/questions/140788/how-is-the-fourier-transform-linear)
     + For a discussion on what it means to be a linear transform and how can a Fourier Transform be considered one.
     + Spoiler alert: If it satisfies two conditions, namely, additivity (addition) and homogeneity (multiplication by scalar).
@@ -55,7 +22,8 @@
     + For an introduction to signal processing and handling case when `n` is not power of 2 (recommended by CLRS).
 + [Rafael C. Gonzalez and Richard E. Woods. _Digital Image Processing_, 1992](https://dl.acm.org/citation.cfm?id=573607)
     + For a discussion in multidimensional Fourier Transforms and their use in image processing (recommended by CLRS).
-+ https://brilliant.org/wiki/roots-of-unity/
++ [Brilliant.org. _Roots of unity_](https://brilliant.org/wiki/roots-of-unity/)
+    + Useful intuition for FFT key concept.
 
 ## Literature
 

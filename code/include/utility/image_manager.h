@@ -2,6 +2,7 @@
 #define __IMAGE_MANAGER_H__
 
 #include "algorithms/fft.h"
+#include <cmath>
 #include <sstream>
 #include <vector>
 
@@ -22,20 +23,24 @@ class ImageTransform {
     void apply_lp(double d0);
     void apply_bp(double fc1, double fc2);
 
+    CompMatrix get_matrix(void);
     void set_matrix(CompMatrix& matrix);
 };
 
 class ImageUtils {
    public:
     static bool cmp_complex(cn a, cn b) { return real(a) < real(b); }
-    static CompMatrix pad0_complex(CompMatrix& matrix, int width, int height) {
-        CompMatrix rows(width * 2, std::vector<cn>(height * 2, 0));
+    static void pad0_complex(CompMatrix& matrix) {
+        int height = matrix.size();
+        int width = matrix[0].size();
+
+        CompMatrix rows(height * 2, std::vector<cn>(width * 2, 0));
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 rows[x][y] = matrix[x][y];
             }
         }
-        return rows;
+        matrix = rows;
     }
     static void center_matrix(CompMatrix& matrix) {
         int width = matrix.size();
@@ -47,7 +52,7 @@ class ImageUtils {
         }
     }
     static double dist_euclid(int cx, int cy, int px, int py) {
-        return sqrt(pow(cx - px, 2) + pow(cy - py, 2));
+        return sqrt(pow(px - cx / 2, 2) + pow(py - cy / 2, 2));
     }
 };
 #endif
