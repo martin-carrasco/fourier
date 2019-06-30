@@ -4,15 +4,19 @@
 
 using namespace std;
 
+vector<vector<cn>> ft(vector<vector<cn>> vec);
+
 int main(void) {
-  vector<vector<cn>> img_matrix = make_2d_array();
+    vector<vector<cn>> img_matrix = make_2d_array();
 
-  ImageTransform transformer(img_matrix);
+    ImageTransform transformer(img_matrix);
 
-  transformer.apply_lp(0.0);
+    transformer.apply_lp(3.0);
 
-  // save_img(img_matrix);
-  display_csv(img_matrix);
+    // save_img(img_matrix);
 
-  return 0;
+    img_matrix = transformer.get_matrix();
+    display_csv(img_matrix);
+
+    return 0;
 }

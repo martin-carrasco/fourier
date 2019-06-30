@@ -11,4 +11,4 @@ RUN cmake . && make
 
 WORKDIR /app
 
-CMD ["./bin/audio"]
+CMD ["./bin/image"]
