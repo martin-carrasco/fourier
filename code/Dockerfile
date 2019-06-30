@@ -1,14 +1,11 @@
 FROM cpp_libs:latest
 
-RUN apt-get -y install pulseaudio pulseaudio-utils
-
+RUN pip3 install matplotlib numpy
+RUN apt-get install -y -qqy x11-apps 
 RUN mkdir /app && ls /app
 WORKDIR /app
 COPY . /app
 
-# RUN ./configure
 RUN cmake . && make
 
-WORKDIR /app
-
-CMD ["./bin/audio"]
+CMD ["./bin/generic"]

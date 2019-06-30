@@ -11,13 +11,12 @@
 #include <string>
 #include <vector>
 
-#define FILENAME "res/image/input/indian.png"
-#define OUTPUT_FILE "res/image/output/output.txt"
-#define INPUT_FILE "res/image/input/input.txt"
+#define OUTPUT_PATH "res/image/output/"
+#define INPUT_PATH "res/image/input/"
 
 typedef cv::Mat Img;
 
-std::vector<std::vector<cn> > make_2d_array();
-void display_csv(std::vector<std::vector<cn> > matrix);
-
+std::vector<std::vector<cn>> read_img(const std::string filename);
+void display_img(std::vector<std::vector<cn>> matrix);
+void to_csv(std::string filename, const std::vector<std::vector<cn>>& matrix);
 #endif

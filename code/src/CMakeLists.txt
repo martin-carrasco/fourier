@@ -1,29 +1,26 @@
 FILE (GLOB_RECURSE algorithms algorithms/*.cpp )
 FILE (GLOB_RECURSE applications applications/*.cpp )
 FILE (GLOB_RECURSE utility utility/*.cpp )
+FILE (GLOB_RECURSE main_files main/*.cpp )
 
 SET (project_SRCS ${algorithms} ${applications} ${utility})
 
 SET (project_MOC_HEADERS app.h)
 
-# SET (project_LIBS  ${SFMLall_LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} ${PYGTK_LIBRARIES} ${GTKMM_LIBRARIES})
-SET (project_LIBS  ${SFMLall_LIBRARIES}  ${OpenCV_LIBRARIES})
+# SET (project_LIBS  ${SFMLall_LIBRARIES} ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} ${PYGTK_LIBRARIES} ${GTKMM_LIBRARIES} ${OpenCV_LIBRARIES})
 
-SET (bin_audio audio)
-SET (bin_image image)
-SET (CMAKE_CXX_FLAGS "-g -std=c++17 -Wall -Wfloat-conversion")
+SET (project_LIBS  ${SFMLall_LIBRARIES} ${PYTHON_LIBRARIES} ${OpenCV_LIBRARIES} -lstdc++fs)
+# SET (project_LIBS  ${SFMLall_LIBRARIES}  ${OpenCV_LIBRARIES})
 
-ADD_EXECUTABLE(${bin_audio} main_audio.cpp  ${project_SRCS} ${project_MOC_SRCS_GENERATED})
-ADD_EXECUTABLE(${bin_image} main_image.cpp  ${project_SRCS} ${project_MOC_SRCS_GENERATED})
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfloat-conversion")
 
-TARGET_LINK_LIBRARIES(${bin_audio} ${project_LIBS})
-TARGET_LINK_LIBRARIES(${bin_image} ${project_LIBS})
+MESSAGE("ALL MAIN FILES: ${main_files}")
 
-MESSAGE(${bin_audio})
-MESSAGE(${bin_image})
-
-SET_TARGET_PROPERTIES(${bin_audio} PROPERTIES VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}" OUTPUT_NAME ${bin_audio} CLEAN_DIRECT_OUTPUT 1)
-SET_TARGET_PROPERTIES(${bin_image} PROPERTIES VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}" OUTPUT_NAME ${bin_image} CLEAN_DIRECT_OUTPUT 1)
-
-INSTALL(TARGETS ${bin_audio} DESTINATION bin)
-INSTALL(TARGETS ${bin_image} DESTINATION bin)
+foreach(main ${main_files})
+    STRING( REPLACE ".cpp" "" path_no_extension ${main} )
+    GET_FILENAME_COMPONENT(basename ${path_no_extension} NAME)
+    ADD_EXECUTABLE(${basename} ${main} ${project_SRCS} ${project_MOC_SRCS_GENERATED})
+    TARGET_LINK_LIBRARIES(${basename} ${project_LIBS})
+    SET_TARGET_PROPERTIES(${basename} PROPERTIES VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}" OUTPUT_NAME ${basename} CLEAN_DIRECT_OUTPUT 1)
+    INSTALL(TARGETS ${basename} DESTINATION bin)
+endforeach()

@@ -35,3 +35,10 @@ RUN useradd --create-home --home-dir $HOME pulseaudio \
 	&& usermod -aG audio,pulse,pulse-access pulseaudio \
 	&& chown -R pulseaudio:pulseaudio $HOME
 
+# DEFAULTS TO GCC/G++8
+RUN apt-get update \
+    && apt-get install -y software-properties-common \
+    && add-apt-repository ppa:ubuntu-toolchain-r/test -y \
+    && apt-get install gcc-8 g++-8 -y \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-8 \
+    && update-alternatives --config gcc
