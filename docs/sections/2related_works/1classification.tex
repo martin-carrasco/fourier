@@ -1,12 +1,28 @@
 \subsection{Classification}
 
-\subsubsection{DFT}
+\subsubsection{Discrete Fourier Transform (DFT))}
 
 % Si DFT toma, en su naive version \Thetta{N^2}, Cooley-Tukey realizaron FFT con una complejidad de \Thetta(N*logN).
 
-\subsubsection{FFT}
+% TO-DO: Change sub sub section name (?)
 
-Cooley and Tukey developed an algorithm to calculate DFT, with a complexity of $O(n*logn)$, opposite to the naive version with a complexity of $O(n^2)$. The Cooley-Tukey algorithm is known as fast Fourier transform (FFT).
+Fourier Transforms are usually defined in the continuous realm of numbers, but for effects of computation, we will deal with it is reciprocal: the Discrete Fourier transform.
 
+\subsubsection{Algorithms to solve DFT}
 
+\textbf{Fast Fourier Transform (FFT)}   
+\noindent
+Cooley and Tukey, in 1964, developed an algorithm to calculate the finite Fourier transform in a fast way, with a complexity of $O(n*logn)$, opposite to the naive version that has a complexity of $O(n^2)$. In each case, $n$ describes data points, where is recommend to use $n = 2^m$ points. The Cooley-Tukey algorithm is known as Fast Fourier transform. \\
 
+\begin{comment}
+\noindent
+Next we present the pseudocode for FFT on listing \ref{related-works-listing-fft-pseudocode} and the implementation on listing \ref{related-works-listing-fft-implementation}:
+
+\lstinputlisting[language={}, caption="FFT pseudocode", style=listingcode, label=related-works-listing-fft-pseudocode]{sections/2related_works/source_code/fft.txt}
+
+\lstinputlisting[language=C++, caption="FFT implementation", style=listingcode, label=related-works-listing-fft-implementation]{sections/2related_works/source_code/fft_recursive.cpp}
+
+\bigskip \noindent
+\textbf{Sparse Fast Fourier Transform}
+\noindent
+\end{comment}
