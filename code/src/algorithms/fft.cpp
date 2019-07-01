@@ -141,3 +141,27 @@ vector<vector<cn>> dj_out_fft2d(const vector<vector<cn>>& a,
 
     return res;
 }
+
+/*
+vector<vector<cn>> oc_out_fft2d(vector<vector<cn>> a, bool inverse = false)
+{
+
+    const char* filename = "res/image/input/house.png";
+    Mat I = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+    if (I.empty()) return -1;
+
+    Mat padded;  // expand input image to optimal size
+    int m = getOptimalDFTSize(I.rows);
+    int n = getOptimalDFTSize(I.cols);  // on the border add zero values
+    copyMakeBorder(I, padded, 0, m - I.rows, 0, n - I.cols, BORDER_CONSTANT,
+                   Scalar::all(0));
+
+    Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)};
+    Mat complexI;
+    merge(planes, 2, complexI);  // Add to the expanded another plane with zeros
+
+    dft(complexI,
+        complexI);  // this way the result may fit in the source matrix
+
+}
+*/

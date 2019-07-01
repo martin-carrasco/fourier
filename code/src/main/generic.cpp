@@ -12,7 +12,7 @@ namespace plt = matplotlibcpp;
 namespace fs = std::filesystem;
 
 int main(int argc, const char* argv[]) {
-    auto img = read_img("indian.png");
+    auto img = read_img("house.png");
     ct_in_fft2d(img, false);
     display_img(img, true);
     return 0;
