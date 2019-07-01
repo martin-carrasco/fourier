@@ -74,7 +74,7 @@ void display_img(vector<vector<cn>> matrix, bool domain = false) {
     // Loop over vectors and add the data
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
-            double temp;
+            int temp = 0;
             auto elem = matrix[row][col];
             if (domain) {
                 std::cout << "magnitude: "
@@ -83,19 +83,16 @@ void display_img(vector<vector<cn>> matrix, bool domain = false) {
                 std::cout << " power: ";
                 std::cout << temp << "\n";
             } else {
-                temp = matrix[row][col].real();
+                temp = floor(matrix[row][col].real());
             }
 
-            vect.at<uchar>(row, col) = temp;
-            std::cout << (int)vect.ptr<uchar>(row)[col] << endl;
+            vect.at<uchar>(row, col) = temp < 0 ? 0 : temp > 255 ? 255 : temp;
         }
     }
 
     cout << "Finished adding data\n";
     // Show image
     cv::namedWindow("Image", cv::WINDOW_NORMAL);
-    cout << "temp\n";
     cv::imshow("Image", vect);
-    cout << "owo\n";
     cv::waitKey(0);
 }
