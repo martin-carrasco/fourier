@@ -1,0 +1,2 @@
+#!/bin/bash
+docker build -t cpp_libs res/cpp_libs

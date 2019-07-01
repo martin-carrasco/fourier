@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    echo "todo"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Running on MAC OS"
+    ip=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
+    xhost + $ip
+    echo "ip: " $ip
+fi
+
+docker run \
+    --rm -it \
+    -e DISPLAY=$ip:0 \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    --privileged \
+    -v $(pwd)/res/image/output:/app/res/image/output fourier_img
+
