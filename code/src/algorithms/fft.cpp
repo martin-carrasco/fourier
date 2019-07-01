@@ -142,26 +142,26 @@ vector<vector<cn>> dj_out_fft2d(const vector<vector<cn>>& a,
     return res;
 }
 
-/*
-vector<vector<cn>> oc_out_fft2d(vector<vector<cn>> a, bool inverse = false)
-{
+void shift_fft2d(vector<vector<cn>>& vec) {
+    int height = vec.size();
+    int width = vec[0].size();
 
-    const char* filename = "res/image/input/house.png";
-    Mat I = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
-    if (I.empty()) return -1;
+    int half_width = width / 2;
+    int half_height = height / 2;
 
-    Mat padded;  // expand input image to optimal size
-    int m = getOptimalDFTSize(I.rows);
-    int n = getOptimalDFTSize(I.cols);  // on the border add zero values
-    copyMakeBorder(I, padded, 0, m - I.rows, 0, n - I.cols, BORDER_CONSTANT,
-                   Scalar::all(0));
+    for (int i = 0; i < half_height; i++) {
+        for (int j = 0; j < half_width; j++) {
+            cn tmp_1_quad = vec[i][j];
+            cn tmp_4_quad = vec[i + half_height][j + half_width];
+            vec[i][j] = tmp_4_quad;
+            vec[i + half_height][j + half_width] = tmp_1_quad;
+        }
 
-    Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)};
-    Mat complexI;
-    merge(planes, 2, complexI);  // Add to the expanded another plane with zeros
-
-    dft(complexI,
-        complexI);  // this way the result may fit in the source matrix
-
+        for (int k = half_width; k < height; k++) {
+            cn tmp_2_quad = vec[i][k];
+            cn tmp_3_quad = vec[i + half_height][k - half_width];
+            vec[i][k] = tmp_3_quad;
+            vec[i + half_height][k - half_width] = tmp_2_quad;
+        }
+    }
 }
-*/

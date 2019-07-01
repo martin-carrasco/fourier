@@ -1,105 +1,111 @@
 #include "utility/image_manager.h"
 #include <algorithm>
+#include <assert.h>
 #include <iostream>
 
 using namespace std;
 
-ImageTransform::ImageTransform(void) {}
-
-ImageTransform::ImageTransform(CompMatrix& matrix) {
+ImageTransform::ImageTransform(CMatrix matrix) {
+    this->original_height = matrix.size();
+    this->original_width = matrix[0].size();
     this->complex_matrix = matrix;
 }
 
-void ImageTransform::convolute_filter(CompMatrix& mask, int width, int height) {
-    // 2D FFT
-    ct_in_fft2d(complex_matrix, false);
+pair<int, int> ImageTransform::get_dimentions(void) {
+    return make_pair(complex_matrix.size(), complex_matrix[0].size());
+}
+CMatrix ImageTransform::get_matrix(void) { return complex_matrix; }
 
-    // 2D FFT of filter
-    ct_in_fft2d(mask, false);
-
-    // Apply the filter H(x, y) to F(x, y) (multiply)
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            complex_matrix[x][y] = complex_matrix[x][y] * mask[x][y];
-        }
-    }
-
-    // Inverse 2D FFT
-    ct_in_fft2d(complex_matrix, true);
+ImageTransform& ImageTransform::transform(bool direction) {
+    ct_in_fft2d(complex_matrix, direction);
 }
 
-void ImageTransform::apply_lp(double d0) {
-    int height = this->complex_matrix.size();
-    int width = this->complex_matrix[0].size();
+CMatrix ImageTransform::apply(const CMatrix& filter) {
+    int height = filter.size();
+    int width = filter[0].size();
 
-    ImageUtils::pad0_complex(complex_matrix);
-    ImageUtils::center_matrix(complex_matrix);
+    // Make sure that a multiplication by a filter has same size as the matrix
+    assert(height == complex_matrix.size() &&
+           width == complex_matrix[0].size());
 
-    int Q = complex_matrix.size();
-    int P = complex_matrix[0].size();
-
-    CompMatrix image_filter(P, vector<cn>(Q, 0));
-    for (int x = d0 / 2; x < P; x += d0 / 2 + 1) {
-        for (int y = d0 / 2; y < Q; d0 / 2 + 1) {
-            for (int z1 = -d0 / 2, z2 = d0 / 2; z1 <= d0 / 2 || z2 >= -d0 / 2;
-                 z1++, z2--) {
-                int px_1, py_1, px_2, py_2;
-                double val_1, val_2;
-
-                px_1 = x + z1;
-                py_1 = y + z2;
-                px_2 = x + z2;
-                py_2 = y + z1;
-
-                if (px_1 < P && px_1 > 0 && py_1 < Q && py_1 > 0) {
-                    val_1 = ImageUtils::dist_euclid(x, y, px_1, py_1);
-                    image_filter[px_1][py_1] = val_1 < d0 ? 1 : 0;
-                    cout << "Threshold: " << val_1 << endl;
-                    cout << "H(x,y): " << image_filter[px_1][py_1] << endl;
-                }
-                if (px_2 < P && px_2 > 0 && py_2 < Q && py_2 > 0) {
-                    val_2 = ImageUtils::dist_euclid(x, y, px_2, py_2);
-                    image_filter[px_2][py_2] = val_2 < d0 ? 1 : 0;
-                    cout << "Threshold: " << val_2 << endl;
-
-                    cout << "H(x,y): " << image_filter[px_2][py_2] << endl;
-                }
-            }
+    for (int x = 0; x < height; x++) {
+        for (int y = 0; y < width; y++) {
+            complex_matrix[x][y] = complex_matrix[x][y] * filter[x][y];
         }
     }
-    ImageUtils::center_matrix(image_filter);
-    cout << endl;
-    cout << "Convolution starting..." << endl;
-    cout << endl;
-
-    this->convolute_filter(image_filter, P, Q);
+}
+ImageTransform ImageTransform::shift(void) {
+    shift_fft2d(complex_matrix);
+    return *this;
 }
 
-void ImageTransform::apply_bp(double fc1, double fc2) {
-    int width = this->complex_matrix.size();
-    int height = this->complex_matrix[0].size();
+ImageTransform& ImageTransform::crop(void) {
+    complex_matrix.resize(original_height);
+    for (auto& row : complex_matrix) {
+        row.resize(original_width);
+    }
+    return *this;
+}
+ImageTransform& ImageTransform::pad(void) {
+    int height = complex_matrix.size();
+    int width = complex_matrix[0].size();
 
-    CompMatrix image_filter(width, vector<cn>(height, 0));
+    for (auto& row : complex_matrix) row.resize(width * 2, 0);
 
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            double m =
-                (static_cast<double>(x) - static_cast<double>(width) / 2.D) /
-                static_cast<double>(width);
-            double n = (y - height / 2.D) / static_cast<double>(height);
+    complex_matrix.resize(height * 2, vector<cn>(width * 2, 0));
 
-            double total = sqrt(pow(m, 2) + pow(n, 2));
+    return *this;
+}
+ImageTransform& ImageTransform::center(void) {
+    int width = complex_matrix.size();
+    int height = complex_matrix[0].size();
 
-            if (fc1 <= total && total <= fc2)
-                image_filter[x][y] = 0;
+    for (int x = 0; x < height; x++) {
+        for (int y = 0; y < width; y++) {
+            complex_matrix[x][y] *= pow(-1, x + y);
+        }
+    }
+    return *this;
+}
+
+CMatrix Filters::gaussian_low_pass(int height, int width, double fc) {
+    CMatrix filter(height, std::vector<cn>(height, 0));
+    for (int x = 0; x < height; x++) {
+        for (int y = 0; y < width; y++) {
+            double dist =
+                -1 * pow(ImageUtils::dist_euclid(x, y, height, width), 2);
+            double func = 2 * pow(2, fc);
+            double val = exp(dist / func);
+
+            filter[x][y] = val;
+        }
+    }
+    return filter;
+}
+
+CMatrix Filters::high_pass(int height, int width, double fc) {
+    CMatrix filter(height, std::vector<cn>(height, 0));
+    for (int x = 0; x < height; x++) {
+        for (int y = 0; y < width; y++) {
+            double val = ImageUtils::dist_euclid(x, y, height, width);
+            if (val <= fc)
+                filter[x][y] = 0;
             else
-                image_filter[x][y] = 1;
+                filter[x][y] = 1;
         }
     }
-    this->convolute_filter(image_filter, width, height);
+    return filter;
 }
-
-CompMatrix ImageTransform::get_matrix(void) { return this->complex_matrix; }
-void ImageTransform::set_matrix(CompMatrix& matrix) {
-    this->complex_matrix = matrix;
+CMatrix Filters::low_pass(int height, int width, double fc) {
+    CMatrix filter(height, std::vector<cn>(height, 0));
+    for (int x = 0; x < height; x++) {
+        for (int y = 0; y < width; y++) {
+            double val = ImageUtils::dist_euclid(x, y, height, width);
+            if (val <= fc)
+                filter[x][y] = 1;
+            else
+                filter[x][y] = 0;
+        }
+    }
+    return filter;
 }

@@ -6,53 +6,48 @@
 #include <sstream>
 #include <vector>
 
-typedef typename std::vector<std::vector<cn>> CompMatrix;
-
-std::vector<std::vector<cn>> lpf(std::vector<std::vector<cn>> f);
-
-class ImageTransform {
-   private:
-    CompMatrix complex_matrix;
-    void convolute_filter(CompMatrix& mask, int width, int height);
-
-   public:
-    ImageTransform(void);
-    ImageTransform(CompMatrix& matrix);
-
-    void apply_hp(double d0);
-    void apply_lp(double d0);
-    void apply_bp(double fc1, double fc2);
-
-    CompMatrix get_matrix(void);
-    void set_matrix(CompMatrix& matrix);
-};
+typedef typename std::vector<std::vector<cn>> CMatrix;
 
 class ImageUtils {
    public:
     static bool cmp_complex(cn a, cn b) { return real(a) < real(b); }
-    static void pad0_complex(CompMatrix& matrix) {
-        int height = matrix.size();
-        int width = matrix[0].size();
-
-        CompMatrix rows(height * 2, std::vector<cn>(width * 2, 0));
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                rows[x][y] = matrix[x][y];
-            }
-        }
-        matrix = rows;
-    }
-    static void center_matrix(CompMatrix& matrix) {
-        int width = matrix.size();
-        int height = matrix[0].size();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                matrix[x][y] = matrix[x][y] * pow(-1, x + y);
-            }
-        }
-    }
-    static double dist_euclid(int cx, int cy, int px, int py) {
+    static double dist_euclid(int px, int py, int cx, int cy) {
         return sqrt(pow(px - cx / 2, 2) + pow(py - cy / 2, 2));
     }
 };
+
+class ImageTransform {
+   private:
+    int original_height, original_width;
+    CMatrix complex_matrix;
+
+   public:
+    ImageTransform(CMatrix matrix);
+
+    ImageTransform& transform(
+        bool direction);  // False = Forward, True = Backwards
+
+    ImageTransform& apply(const CMatrix& filter);
+
+    ImageTransform& pad(void);
+    ImageTransform& center(void);
+    ImageTransform& shift(void);
+    ImageTransform& crop(void);
+
+    CMatrix get_matrix(void);
+
+    std::pair<int, int> get_dimentions(void);
+};
+
+// class FilterFactory {
+// public:
+//};
+
+class Filters {
+   public:
+    static CMatrix low_pass(int height, int width, double fc);
+    static CMatrix high_pass(int height, int width, double fc);
+    static CMatrix gaussian_low_pass(int height, int width, double fc);
+};
+
 #endif
