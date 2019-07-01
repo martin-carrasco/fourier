@@ -1,3 +1,5 @@
+# Digital Image Processing - Gonzalez - Notes
+
 An image may be defined as a two-dimensional function `f(x, y)`  where `x` and `y`  are spatial coordinates, and the amplitude of `f` at any pair of coordinates `(x, y)` is called the intensity or gray level of the image at that point.
 
 
@@ -32,16 +34,16 @@ where the assumption is that at every pair of coordinates `(x, y)` the noise is 
 
 If the noise satisfies the constraints just stated it can be shown that if an image $\hat{g}(x, y)$ is formed by averaging `K` different noisy images,
 
-$$\hat{g}(x, y) = \fraq{1}{K}\sum_{i = 1}^{K}g_i(x, y)$$
+$$\hat{g}(x, y) = \frac{1}{K}\sum_{i = 1}^{K}g_i(x, y)$$
 
 then it follows that:
 
-$$E{\hat{g}(x, y)} = f(x, y)$$
+$$E\{\hat{g}(x, y)\} = f(x, y)$$
 
 ## On converting images to eight bits
 
 Given a digital image $g$, an approach that guarantees that the full range of the values is "captured" into a fixed number of bits is as follows. First we perform operation $g_m = g - min(g)$, which creates an image whose minimum value is 0, then we perform the operation 
-$$g_s = K[\fraq{g_m}{max(g_m)}]$$
+$$g_s = K[\frac{g_m}{max(g_m)}]$$
 
 which creates a scaled image, $g_x$, whose values are in the range $[0, K]$. When working with 8-bit images, setting $K = 255$ gives us a scaled image whose intesnities span the full 8-bit scale from 0 to 255.
 
@@ -152,7 +154,7 @@ Using this equation shifts the data so that F(0, 0) is moved to the cneter of th
 
 Because the 2D DFT is complex in general, it can be expressed in polar form:
 
-$$F(u, v) = R(u, v) + jI(u, v) = |F(u, v)| e^{j\pho(u, v)}$$
+$$F(u, v) = R(u, v) + jI(u, v) = |F(u, v)| e^{j\phi(u, v)}$$
 
 where the magnitude:
 
@@ -160,7 +162,7 @@ $$|F(u, v)| = [R^2(u, v) + I^2(u, v)]^{1/2}$$
 
 is called the Fourier (or frequency) spectrum, and
 
-$$\phi(u, v) = arctan[\fraq{I(u, v)}{R(u, v)}]$$
+$$\phi(u, v) = arctan[\frac{I(u, v)}{R(u, v)}]$$
 
 is the phase angle or phase spectrum. (The arctan must be computed using a four-quadrant arctangent function)
 
