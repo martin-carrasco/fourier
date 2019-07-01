@@ -1,0 +1,15 @@
+Input: Coefficient representation of a polynomial A(x) of degree ≤ n − 1,
+       where n is a power of 2
+Output: Value representation A(w^0), . . . , A(w^n−1)
+
+function FFT(A, w)
+  if w = 1: return A(1)
+  
+  express A(x) in the form Ae(x^2) + xAo(x^2)
+  call FFT(Ae, w^2) to evaluate Ae at even powers of w
+  call FFT(Ao, w^2) to evaluate Ao at even powers of w
+  
+  for j = 0 to n − 1:
+    compute A(w^j) = Ae(w^2j) + w^[jAo(w^2j)]
+    
+  return A(w^0), . . . , A(w^n−1)
