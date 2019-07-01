@@ -6,7 +6,7 @@
 #include <sstream>
 #include <vector>
 
-typedef typename std::vector<std::vector<cn>> CompMatrix;
+typedef typename std::vector<std::vector<cn>> CMatrix;
 
 class ImageUtils {
    public:
@@ -19,37 +19,35 @@ class ImageUtils {
 class ImageTransform {
    private:
     int original_height, original_width;
-    CompMatrix complex_matrix;
+    CMatrix complex_matrix;
 
    public:
-    ImageTransform(CompMatrix matrix);
+    ImageTransform(CMatrix matrix);
 
-    void transform(bool direction);  // False = Forward, True = Backwards
+    ImageTransform& transform(
+        bool direction);  // False = Forward, True = Backwards
 
-    void convolute_kernel(const CompMatrix& kernel);
-    void convolute_whole(const CompMatrix& filter);
+    ImageTransform& apply(const CMatrix& filter);
 
-    void pad(void);
-    void center(void);
-    void shift(void);
-    void crop(void);
+    ImageTransform& pad(void);
+    ImageTransform& center(void);
+    ImageTransform& shift(void);
+    ImageTransform& crop(void);
 
-    CompMatrix get_matrix(void);
+    CMatrix get_matrix(void);
 
     std::pair<int, int> get_dimentions(void);
 };
 
-class FilterFactory {
-   public:
-};
+// class FilterFactory {
+// public:
+//};
+
 class Filters {
    public:
-    static CompMatrix low_pass(int height, int width, double fc);
-    static CompMatrix high_pass(int height, int width, double fc);
-    static CompMatrix gaussian_low_pass(int height, int width, double fc);
+    static CMatrix low_pass(int height, int width, double fc);
+    static CMatrix high_pass(int height, int width, double fc);
+    static CMatrix gaussian_low_pass(int height, int width, double fc);
 };
 
-class FilterTransform {
-   public:
-};
 #endif
