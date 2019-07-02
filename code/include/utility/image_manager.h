@@ -22,17 +22,16 @@ class ImageTransform {
     CMatrix complex_matrix;
 
    public:
-    ImageTransform(CMatrix matrix);
+    ImageTransform(const CMatrix& matrix);
 
-    ImageTransform& transform(
-        bool direction);  // False = Forward, True = Backwards
+    void transform(bool direction);  // False = Forward, True = Backwards
 
-    ImageTransform& apply(const CMatrix& filter);
+    void apply(const CMatrix& filter);
 
-    ImageTransform& pad(void);
-    ImageTransform& center(void);
-    ImageTransform& shift(void);
-    ImageTransform& crop(void);
+    void pad(void);
+    void center(void);
+    void shift(void);
+    void crop(void);
 
     CMatrix get_matrix(void);
 
