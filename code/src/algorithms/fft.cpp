@@ -15,7 +15,20 @@ bool is_prime(int num) {
     }
     return prime;
 }
-
+vector<cn> convolute(const vector<cn>& f, const vector<cn>& g) {
+    int f_size = f.size();
+    int g_size = g.size();
+    int total_size = f_size + g_size - 1;
+    std::vector<cn> output(total_size, 0);
+    for (int x = 0; x < total_size; x++) {
+        int jmn = (x >= g_size - 1) ? x - (g_size - 1) : 0;
+        int jmx = (x < f_size - 1) ? x : f_size - 1;
+        for (int y = jmn; y <= jmx; y++) {
+            output[x] += (f[y] * g[x - y]);
+        }
+    }
+    return output;
+}
 vector<cn> ct_out_fft1d(const vector<cn>& a, bool inverse = false) {
     int n;
     double rad;
@@ -179,4 +192,48 @@ void shift_fft2d(vector<vector<cn>>& vec) {
 void rad_in_fft1d(vector<cn>& vec, bool inverse) {
     assert(is_prime(vec.size()));
 }
-void win_in_fft1d(std::vector<cn>& vec, bool inverse) {}
+void win_in_fft1d(vector<cn>& vec, bool inverse) {
+    // TODO find if vec.size() = prime ^ k
+    int p = 1;
+    assert(is_prime(p));
+}
+void blu_in_fft1d(vector<cn>& vec, bool inverse) {
+    int size = vec.size();
+    vector<cn> x_q(size, 0);
+    vector<cn> w_q(size, 0);
+
+    for (int x = 0; x < size; x++) {
+        cn x_n = vec[x];
+        double r, c;
+
+        r = cos(M_PI * -1 * pow(x, 2) / size);
+        c = sin(M_PI * -1 * pow(x, 2) / size);
+
+        cn w(r, c);
+
+        cn res = w * x_n;
+        x_q.push_back(res);
+    }
+
+    for (int x = (-1 * size) + 1; x < size; x++) {
+        double r, c;
+
+        r = cos(M_PI * pow(x, 2) / size);
+        c = sin(M_PI * pow(x, 2) / size);
+        cn w(r, c);
+
+        w_q.push_back(w);
+    }
+
+    vector<cn> con = convolute(x_q, w_q);
+    for (int k = 0; k < size; k++) {
+        double r, c;
+
+        r = cos(M_PI * -1 * pow(k, 2) / size);
+        c = sin(M_PI * -1 * pow(k, 2) / size);
+
+        cn gen_w(r, c);
+
+        vec[k] = gen_w * con[k];
+    }
+}
