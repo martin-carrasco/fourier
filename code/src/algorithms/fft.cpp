@@ -152,6 +152,7 @@ vector<vector<cn>> dj_out_fft2d(const vector<vector<cn>>& a,
 
     return res;
 }
+
 void shift_fft2d(vector<vector<cn>>& vec) {
     int height = vec.size();
     int width = vec[0].size();

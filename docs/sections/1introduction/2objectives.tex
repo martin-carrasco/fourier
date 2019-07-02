@@ -1,11 +1,77 @@
 \subsection{Objectives}
 
-\textbf{Main objective:}
+\textbf{Main objective}
 \begin{itemize}
-    \item To evaluate the efficacy 
+    \item To evaluate the efficacy of different algorithms that solve DFT
 \end{itemize}
 
-\noindent \textbf{Secondary objectives:}
+\noindent \textbf{Secondary objectives}
 \begin{itemize}
-    \item Implement 
+    \item Implement a noise reduction technique for images
+    \item Implement a noise reduction technique for audio 
 \end{itemize}
+
+
+\section{Theory}
+\subsection{Previous concepts}
+\subsubsection{Linear time invariant system}
+We are going to work with Fourier transform in a linear time invariant system for their properties and easy representation.   
+A system is any process that in response to an input signal, produces an output signal. Linear time invariant (LTI) has two properties: Linear system and time invariant system.
+
+Time invariant is a system where a output does not change depending on when the input was applied, but could depend in previous inputs. Linear system allow us to make linear operations. This means: \\ 
+$F(a+b)(x) = Fa(x) + Fb(x) $\\
+$F(ab)(x) = abF(x)$
+
+
+\subsection{Period, Frequency and spectrum in signals}
+\subsubsection{Period}
+\subsubsection{Frequency}
+\subsubsection{Spectrum}
+\subsection{Orthogonality}
+\subsection{Fourier Transform}
+\subsubsection{Fast Fourier Transform}
+Fast Fourier transform is used to signal and image processing, and data analysis.
+A transform is a mapping of two different sets of domains. Fourier transform changes information in time domain and frequency domain, even thought the data in this domains look different, it still represents the same information. It converts a function based on the time to a function based in the frequency. 
+\subsection{Short term Fourier Transform}
+\subsection{Convergence of Fourier Series}
+\subsection{Convolution}
+Convolution is a LTI system
+A convolution can be applied by multiplying an image and filtering the space or frequency domain. However, the multiplication in spatial domain is not viable for big masks due to the elevated processing time. 
+
+
+\subsubsection{Properties of discrete time convolution}
+There are several types:
+\begin{itemize}
+\item Associative
+\item Commutative
+\item Distributive properties
+\item 
+\end{itemize}
+\subsection{Filters}
+\subsubsection{Types}
+There are several types:
+\begin{itemize}
+\item Low pass filter: Determinate a mask and frequency upper bound for only pass lowest frequencies and reduce higher ones than the bound 
+\item High pass filter: Determinate a mask and a lower bound frequency for only pass greatest frequencies and reduce lower ones than the bound
+\item Band pass filter:
+\end{itemize}
+
+
+Frequency and spatial domain filtering algorithms are develop in the literature.
+\begin{comment}
+    TODO: Agregar referencias
+\end{comment}
+
+\begin{table}[htbp]
+\begin{center}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Noise} & \textbf{Filter} & \textbf{Domain} \\ \hline
+        Gaussian (or amplifier) & Low pass filter & Frequency \\ \hline
+        Periodic                & Notch filter    & Frequency \\ \hline
+        Salt and pepper         & Median filter   & Space     \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Different type of noises with its recommended filter.}
+\label{tab:types-noises}
+\end{table}

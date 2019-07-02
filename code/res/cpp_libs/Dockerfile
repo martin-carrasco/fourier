@@ -16,6 +16,8 @@ RUN apt-get install -y build-essential cmake
 # INSTALL LIBRARIES
 RUN apt-get install -y libopencv-dev python-opencv libfreetype6-dev libxrandr-dev libudev-dev libogg-dev libflac-dev libvorbis-dev libopenal-dev libboost-all-dev libgtkmm-3.0-dev libgtk-3-dev libsfml-dev
 
+# INSTALL AUDIO ENV
+
 ENV UNAME pacat
 
 RUN apt-get update && apt-get install -y \
@@ -30,12 +32,15 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
+
 ENV HOME /home/pulseaudio
 RUN useradd --create-home --home-dir $HOME pulseaudio \
 	&& usermod -aG audio,pulse,pulse-access pulseaudio \
 	&& chown -R pulseaudio:pulseaudio $HOME
 
+
 # DEFAULTS TO GCC/G++8
+
 RUN apt-get update \
     && apt-get install -y software-properties-common \
     && add-apt-repository ppa:ubuntu-toolchain-r/test -y \
