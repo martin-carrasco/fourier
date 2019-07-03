@@ -11,15 +11,15 @@
 #define DEGREE_PRECISION 180
 
 using namespace cv;
+using namespace std;
 
 /// Global variables
 
-Mat src, src_gray;
+Mat src;
 Mat dst, detected_edges;
 
 int ratio = 3;
 int kernel_size = 3;
-char* window_name = "Edge Map";
 int* H[DEGREE_PRECISION + 1];
 int tota_rho;
 int max_v = 0;
@@ -41,6 +41,23 @@ void initRhoH(void) {
         H[i] = (int*)calloc(tota_rho, sizeof(int));
     }
 }
+
+// vector<pair<int, int>> local_maxima() {
+// vector<pair<int, int>> local_max;
+// int before, after;
+// before = after = 0;
+
+// for (int y = 0; y <= DEGREE_PRECISION; y++) {
+// for (int x = 0; x < total_rho; x++) {
+// if (H[y][x] >= before && H[y][x] >= after) {
+// before = H[y - 1][x];
+// after = H[y + 1][x];
+// local_max.push(local_max[y][x])
+//}
+//}
+//}
+// return local_max;
+//}
 
 void compute_hough(void) {
     int rows = (int)dst.rows;
@@ -65,29 +82,26 @@ void compute_hough(void) {
 int main(int argc, char** argv) {
     /// Load an image
     std::cout << "loading image\n\n";
-    src = imread(std::string(INPUT_PATH) + std::string("pentagon.png"));
+    src = imread(std::string(INPUT_PATH) + std::string("pentagon.png"),
+                 cv::IMREAD_GRAYSCALE);
 
     if (!src.data) {
         std::cout << "dead image\n\n";
         return -1;
     }
 
-    std::cout << "loaded image\n\n";
     /// Create a matrix of the same type and size as src (for dst)
     dst.create(src.size(), src.type());
 
-    std::cout << "greyscaling\n\n";
-    /// Convert the image to grayscale
-    cvtColor(src, src_gray, CV_BGR2GRAY);
-
     std::cout << "creating window\n\n";
-    /// Create a window
+
     namedWindow("original", CV_WINDOW_AUTOSIZE);
     namedWindow("hough space", CV_WINDOW_AUTOSIZE);
+    namedWindow("lines", CV_WINDOW_AUTOSIZE);
 
     std::cout << "blurring\n\n";
     /// Reduce noise with a kernel 3x3
-    blur(src_gray, detected_edges, Size(3, 3));
+    blur(src, detected_edges, Size(3, 3));
 
     std::cout << "applying canny\n\n";
     /// Canny detector
@@ -118,16 +132,50 @@ int main(int argc, char** argv) {
     std::cout << "RANGE RHO: " << tota_rho
               << "\tRANGE DEG: " << DEGREE_PRECISION << std::endl;
     std::cout << "MAX VALUE: " << max_v << std::endl;
+
+    vector<pair<int, int>> coords;
+    int max = 0;
+    for (int row = 0; row < hough_rows; ++row) {
+        for (int col = 0; col < hough_cols; ++col) {
+            // cout << H[row][col] << endl;
+            if (H[row][col] >= 20) {
+                double theta_rad = col * M_PI / 180;
+                // int y = row / sin(theta_rad);
+                // int x = row / cos(theta_rad);
+                pair<int, int> current_pair = make_pair(row, theta_rad);
+                coords.push_back(current_pair);
+            }
+        }
+    }
+
+    cout << coords.size() << endl;
+    Mat l(dst.rows, dst.cols, CV_8UC1);
+    for (auto& [rho, theta] : coords) {
+        cv::Point p1, p2;
+
+        double x = rho / cos(theta);
+        double y = rho / sin(theta);
+
+        p1.x = 0;
+        p1.y = y;
+        p2.x = x;
+        p2.y = 0;
+        line(dst, p1, p2, Scalar(255, 255, 255), 3, LINE_AA);
+    }
     for (int row = 0; row < hough_rows; ++row) {
         for (int col = 0; col < hough_cols; ++col) {
             hough.at<uchar>(row, col) = (int)(20.0 * log2(H[row][col]));
         }
     }
+
     // MAX VALUE: 191
     // row: 0, col: 0 -->	row: 0, col: -400
 
     std::cout << "showing hough space\n";
     imshow("hough space", hough);
+
+    cout << "Showing lines\n";
+    imshow("lines", l);
 
     std::cout << "showing original space\n";
     imshow("original", dst);
