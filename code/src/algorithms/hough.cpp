@@ -121,8 +121,9 @@ cv::Mat hough(cv::Mat img) {
     Mat hough =
         Mat::zeros(2 * n_rho + 1 /*rows*/, 2 * n_theta + 1 /*cols*/, CV_8UC1);
 
+    plot_3d(H, n_rho, n_theta);
+
     /*
-    plot_3d(H0, n_rho, n_theta);
     std::ofstream out(std::string(OUTPUT_PATH) + std::string("hcsv.csv"));
 
     for (int row = -n_rho; row <= n_rho; ++row) {
