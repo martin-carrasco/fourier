@@ -38,9 +38,6 @@ RUN useradd --create-home --home-dir $HOME pulseaudio \
 	&& usermod -aG audio,pulse,pulse-access pulseaudio \
 	&& chown -R pulseaudio:pulseaudio $HOME
 
-# INSTALL VIDEO ENV
-
-RUN apt-get install -y -qqy x11-apps 
 
 # DEFAULTS TO GCC/G++8
 

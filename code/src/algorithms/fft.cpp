@@ -5,6 +5,17 @@
 
 using namespace std;
 
+bool is_prime(int num) {
+    bool prime = true;
+    for (int x = 2; x <= num / 2; x++) {
+        if (num % x == 0) {
+            prime = false;
+            break;
+        }
+    }
+    return prime;
+}
+
 vector<cn> ct_out_fft1d(const vector<cn>& a, bool inverse = false) {
     int n;
     double rad;
@@ -165,3 +176,7 @@ void shift_fft2d(vector<vector<cn>>& vec) {
         }
     }
 }
+void rad_in_fft1d(vector<cn>& vec, bool inverse) {
+    assert(is_prime(vec.size()));
+}
+void win_in_fft1d(std::vector<cn>& vec, bool inverse) {}

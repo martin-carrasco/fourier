@@ -64,7 +64,7 @@ double magnitude(vector<double> v) {
 
 // time = 0
 // frequency = 1
-void display_img(vector<vector<cn>> matrix, bool domain = false) {
+Img display_img(vector<vector<cn>> matrix, bool domain = false) {
     // Now add all the data into a Mat element
     int rows = matrix.size();
     int cols = matrix[0].size();
@@ -95,4 +95,5 @@ void display_img(vector<vector<cn>> matrix, bool domain = false) {
     cv::namedWindow("Image", cv::WINDOW_NORMAL);
     cv::imshow("Image", vect);
     cv::waitKey(0);
+    return vect;
 }

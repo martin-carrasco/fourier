@@ -5,7 +5,7 @@
 
 using namespace std;
 
-ImageTransform::ImageTransform(CMatrix matrix) {
+ImageTransform::ImageTransform(const CMatrix& matrix) {
     this->original_height = matrix.size();
     this->original_width = matrix[0].size();
     this->complex_matrix = matrix;
@@ -16,11 +16,11 @@ pair<int, int> ImageTransform::get_dimentions(void) {
 }
 CMatrix ImageTransform::get_matrix(void) { return complex_matrix; }
 
-ImageTransform& ImageTransform::transform(bool direction) {
+void ImageTransform::transform(bool direction) {
     ct_in_fft2d(complex_matrix, direction);
 }
 
-CMatrix ImageTransform::apply(const CMatrix& filter) {
+void ImageTransform::apply(const CMatrix& filter) {
     int height = filter.size();
     int width = filter[0].size();
 
@@ -34,29 +34,23 @@ CMatrix ImageTransform::apply(const CMatrix& filter) {
         }
     }
 }
-ImageTransform ImageTransform::shift(void) {
-    shift_fft2d(complex_matrix);
-    return *this;
-}
+void ImageTransform::shift(void) { shift_fft2d(complex_matrix); }
 
-ImageTransform& ImageTransform::crop(void) {
+void ImageTransform::crop(void) {
     complex_matrix.resize(original_height);
     for (auto& row : complex_matrix) {
         row.resize(original_width);
     }
-    return *this;
 }
-ImageTransform& ImageTransform::pad(void) {
+void ImageTransform::pad(void) {
     int height = complex_matrix.size();
     int width = complex_matrix[0].size();
 
     for (auto& row : complex_matrix) row.resize(width * 2, 0);
 
     complex_matrix.resize(height * 2, vector<cn>(width * 2, 0));
-
-    return *this;
 }
-ImageTransform& ImageTransform::center(void) {
+void ImageTransform::center(void) {
     int width = complex_matrix.size();
     int height = complex_matrix[0].size();
 
@@ -65,7 +59,6 @@ ImageTransform& ImageTransform::center(void) {
             complex_matrix[x][y] *= pow(-1, x + y);
         }
     }
-    return *this;
 }
 
 CMatrix Filters::gaussian_low_pass(int height, int width, double fc) {

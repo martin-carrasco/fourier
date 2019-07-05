@@ -17,6 +17,6 @@
 typedef cv::Mat Img;
 
 std::vector<std::vector<cn>> read_img(const std::string filename);
-void display_img(std::vector<std::vector<cn>> matrix, bool domain);
+Img display_img(std::vector<std::vector<cn>> matrix, bool domain);
 void to_csv(std::string filename, const std::vector<std::vector<cn>>& matrix);
 #endif
