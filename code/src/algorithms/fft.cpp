@@ -1,5 +1,5 @@
-#include "algorithms/fake_fft.h"
 #include "algorithms/fft.h"
+#include <cassert>
 #include <cmath>
 #include <exception>
 
@@ -77,10 +77,6 @@ void ct_in_fft1d(vector<cn>& a, bool inverse = false) {
     }
 }
 
-vector<cn> dj_out_fft1d(vector<cn>& a, bool inverse = false) {
-    return dfft1d(a, inverse ? dj::dfft_dir::DIR_BWD : dj::dfft_dir::DIR_FWD);
-}
-
 /*
 void ct_inplace_fft(vector<cn>& ft, bool inverse) {
     if (not(n && !(n & (n - 1))))
@@ -128,29 +124,6 @@ void ct_in_fft2d(vector<vector<cn>>& matrix, bool inverse) {
         t.clear();
         // O(C log C) + O(C) + O(2R)
     }
-}
-
-vector<vector<cn>> dj_out_fft2d(const vector<vector<cn>>& a,
-                                bool inverse = false) {
-    int N = a.size();
-    vector<cn> temp(N, 0);
-    vector<vector<cn>> res(N, vector<cn>(N, 0));
-
-    for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < N; ++j) {
-            temp[j + N * i] = a[i][j];  // set element (i, j)
-        }
-    }
-    temp = dj::dfft2d(temp,
-                      inverse ? dj::dfft_dir::DIR_BWD : dj::dfft_dir::DIR_FWD);
-
-    for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < N; ++j) {
-            res[i][j] = temp[j + N * i];  // set element (i, j)
-        }
-    }
-
-    return res;
 }
 
 void shift_fft2d(vector<vector<cn>>& vec) {
