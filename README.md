@@ -1,11 +1,19 @@
 # Fourier Transform
 
-## Concepts to be reviewed
+## Instructions
 
-## FAQ
+```zsh
+cd code
 
-+ [Fourier](./docs/fourier.md)
-+ [Signal Processing](./docs/signalproc.md)
+# To build image containing OpenCV and other dependencies (only run it one time)
+./script/pre_build
+
+# To compile project
+./script/build
+
+# To execute project
+./script/run
+```
 
 ## Useful resources
 

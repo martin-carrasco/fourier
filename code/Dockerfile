@@ -8,4 +8,4 @@ COPY . /app
 
 RUN cmake . && make
 
-CMD ["./bin/hough"]
+CMD ["./bin/generic"]
