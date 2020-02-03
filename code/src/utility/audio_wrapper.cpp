@@ -12,21 +12,46 @@
 #define AUDIO_PATH "res/audio/"
 using namespace std;
 
+FourierAudio::FourierAudio(vector<cn> raw){
+	ofstream f("test_audio.wav", ios::binary);
+	double hz = 44100; //Sample per second from the function
+	f << "RIFF----WAVEfmt "; //Fill ---- with size
+
+	/* Data format
+	 * 4 bytes - extension data
+	 * 2 bytes - PCM integer samples (default: 1)
+	 * 2 bytes - Channels (default: 2)
+	 * 4 bytes - Sample per second (HZ)
+	 * 4 bytes - (Sample Rate * Bits per sample *Channels ) / 8
+	 * 2 bytes - Data block size (size of 2 integer samples, one for each channel)
+	 * 2 bytes - Number of bits per samble (multiple of 8 so as to use bytes)
+	*/
+	f << "data----"; // Fill ---- with size
+
+
+	//Fill size with raw data 
+	
+
+	//Fill ---- with the chunk size
+
+}
+
 void FourierAudio::readAudio(const std::string path) {
     std::cout << "Reading audio file from: " << AUDIO_PATH << path << "\n";
     if (not buffer.loadFromFile(AUDIO_PATH + path))
         throw std::runtime_error("File " AUDIO_PATH + path +
                                  " couldn't be found.");
 }
+
 void FourierAudio::playAudio(void) const {
     if (buffer.getSampleCount() == 0)
         throw std::runtime_error("No audio to play.");
 
     sf::Sound sound(buffer);
     sound.play();
-    while (sound.getStatus() == sf::Music::Playing)
-        ;
+    while (sound.getStatus() == sf::Music::Playing);
 }
+
 void FourierAudio::printBuffer(void) const {
     auto samples = buffer.getSamples();
     auto count = buffer.getSampleCount();
