@@ -59,6 +59,28 @@ CMAKE_BINARY_DIR = /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/four
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -104,28 +126,6 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
-
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install
-
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
-
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -189,6 +189,21 @@ generic/fast:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/build
 .PHONY : generic/fast
 
+# Convenience name for target.
+src/CMakeFiles/sound.dir/rule:
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/sound.dir/rule
+.PHONY : src/CMakeFiles/sound.dir/rule
+
+# Convenience name for target.
+sound: src/CMakeFiles/sound.dir/rule
+
+.PHONY : sound
+
+# fast build rule for target.
+sound/fast:
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/build
+.PHONY : sound/fast
+
 algorithms/fft.o: algorithms/fft.cpp.o
 
 .PHONY : algorithms/fft.o
@@ -197,6 +212,7 @@ algorithms/fft.o: algorithms/fft.cpp.o
 algorithms/fft.cpp.o:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/algorithms/fft.cpp.o
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/algorithms/fft.cpp.o
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/algorithms/fft.cpp.o
 .PHONY : algorithms/fft.cpp.o
 
 algorithms/fft.i: algorithms/fft.cpp.i
@@ -207,6 +223,7 @@ algorithms/fft.i: algorithms/fft.cpp.i
 algorithms/fft.cpp.i:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/algorithms/fft.cpp.i
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/algorithms/fft.cpp.i
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/algorithms/fft.cpp.i
 .PHONY : algorithms/fft.cpp.i
 
 algorithms/fft.s: algorithms/fft.cpp.s
@@ -217,6 +234,7 @@ algorithms/fft.s: algorithms/fft.cpp.s
 algorithms/fft.cpp.s:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/algorithms/fft.cpp.s
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/algorithms/fft.cpp.s
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/algorithms/fft.cpp.s
 .PHONY : algorithms/fft.cpp.s
 
 applications/fourier_audio.o: applications/fourier_audio.cpp.o
@@ -227,6 +245,7 @@ applications/fourier_audio.o: applications/fourier_audio.cpp.o
 applications/fourier_audio.cpp.o:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/applications/fourier_audio.cpp.o
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/applications/fourier_audio.cpp.o
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/applications/fourier_audio.cpp.o
 .PHONY : applications/fourier_audio.cpp.o
 
 applications/fourier_audio.i: applications/fourier_audio.cpp.i
@@ -237,6 +256,7 @@ applications/fourier_audio.i: applications/fourier_audio.cpp.i
 applications/fourier_audio.cpp.i:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/applications/fourier_audio.cpp.i
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/applications/fourier_audio.cpp.i
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/applications/fourier_audio.cpp.i
 .PHONY : applications/fourier_audio.cpp.i
 
 applications/fourier_audio.s: applications/fourier_audio.cpp.s
@@ -247,6 +267,7 @@ applications/fourier_audio.s: applications/fourier_audio.cpp.s
 applications/fourier_audio.cpp.s:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/applications/fourier_audio.cpp.s
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/applications/fourier_audio.cpp.s
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/applications/fourier_audio.cpp.s
 .PHONY : applications/fourier_audio.cpp.s
 
 main/generic.o: main/generic.cpp.o
@@ -303,6 +324,33 @@ main/opencv.cpp.s:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/main/opencv.cpp.s
 .PHONY : main/opencv.cpp.s
 
+main/sound.o: main/sound.cpp.o
+
+.PHONY : main/sound.o
+
+# target to build an object file
+main/sound.cpp.o:
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/main/sound.cpp.o
+.PHONY : main/sound.cpp.o
+
+main/sound.i: main/sound.cpp.i
+
+.PHONY : main/sound.i
+
+# target to preprocess a source file
+main/sound.cpp.i:
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/main/sound.cpp.i
+.PHONY : main/sound.cpp.i
+
+main/sound.s: main/sound.cpp.s
+
+.PHONY : main/sound.s
+
+# target to generate assembly for a file
+main/sound.cpp.s:
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/main/sound.cpp.s
+.PHONY : main/sound.cpp.s
+
 utility/audio_wrapper.o: utility/audio_wrapper.cpp.o
 
 .PHONY : utility/audio_wrapper.o
@@ -311,6 +359,7 @@ utility/audio_wrapper.o: utility/audio_wrapper.cpp.o
 utility/audio_wrapper.cpp.o:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/audio_wrapper.cpp.o
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/audio_wrapper.cpp.o
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/audio_wrapper.cpp.o
 .PHONY : utility/audio_wrapper.cpp.o
 
 utility/audio_wrapper.i: utility/audio_wrapper.cpp.i
@@ -321,6 +370,7 @@ utility/audio_wrapper.i: utility/audio_wrapper.cpp.i
 utility/audio_wrapper.cpp.i:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/audio_wrapper.cpp.i
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/audio_wrapper.cpp.i
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/audio_wrapper.cpp.i
 .PHONY : utility/audio_wrapper.cpp.i
 
 utility/audio_wrapper.s: utility/audio_wrapper.cpp.s
@@ -331,6 +381,7 @@ utility/audio_wrapper.s: utility/audio_wrapper.cpp.s
 utility/audio_wrapper.cpp.s:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/audio_wrapper.cpp.s
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/audio_wrapper.cpp.s
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/audio_wrapper.cpp.s
 .PHONY : utility/audio_wrapper.cpp.s
 
 utility/image_manager.o: utility/image_manager.cpp.o
@@ -341,6 +392,7 @@ utility/image_manager.o: utility/image_manager.cpp.o
 utility/image_manager.cpp.o:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/image_manager.cpp.o
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/image_manager.cpp.o
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/image_manager.cpp.o
 .PHONY : utility/image_manager.cpp.o
 
 utility/image_manager.i: utility/image_manager.cpp.i
@@ -351,6 +403,7 @@ utility/image_manager.i: utility/image_manager.cpp.i
 utility/image_manager.cpp.i:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/image_manager.cpp.i
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/image_manager.cpp.i
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/image_manager.cpp.i
 .PHONY : utility/image_manager.cpp.i
 
 utility/image_manager.s: utility/image_manager.cpp.s
@@ -361,6 +414,7 @@ utility/image_manager.s: utility/image_manager.cpp.s
 utility/image_manager.cpp.s:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/image_manager.cpp.s
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/image_manager.cpp.s
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/image_manager.cpp.s
 .PHONY : utility/image_manager.cpp.s
 
 utility/opencv_manager.o: utility/opencv_manager.cpp.o
@@ -371,6 +425,7 @@ utility/opencv_manager.o: utility/opencv_manager.cpp.o
 utility/opencv_manager.cpp.o:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/opencv_manager.cpp.o
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/opencv_manager.cpp.o
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/opencv_manager.cpp.o
 .PHONY : utility/opencv_manager.cpp.o
 
 utility/opencv_manager.i: utility/opencv_manager.cpp.i
@@ -381,6 +436,7 @@ utility/opencv_manager.i: utility/opencv_manager.cpp.i
 utility/opencv_manager.cpp.i:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/opencv_manager.cpp.i
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/opencv_manager.cpp.i
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/opencv_manager.cpp.i
 .PHONY : utility/opencv_manager.cpp.i
 
 utility/opencv_manager.s: utility/opencv_manager.cpp.s
@@ -391,6 +447,7 @@ utility/opencv_manager.s: utility/opencv_manager.cpp.s
 utility/opencv_manager.cpp.s:
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/opencv.dir/build.make src/CMakeFiles/opencv.dir/utility/opencv_manager.cpp.s
 	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/generic.dir/build.make src/CMakeFiles/generic.dir/utility/opencv_manager.cpp.s
+	cd /home/martin/Documents/UTEC/Ciclos/2020-0/Mate3/Proyecto/fourier/code && $(MAKE) -f src/CMakeFiles/sound.dir/build.make src/CMakeFiles/sound.dir/utility/opencv_manager.cpp.s
 .PHONY : utility/opencv_manager.cpp.s
 
 # Help Target
@@ -399,14 +456,15 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... install"
+	@echo "... list_install_components"
 	@echo "... install/strip"
 	@echo "... install/local"
 	@echo "... opencv"
 	@echo "... generic"
 	@echo "... edit_cache"
+	@echo "... sound"
 	@echo "... rebuild_cache"
-	@echo "... install"
-	@echo "... list_install_components"
 	@echo "... algorithms/fft.o"
 	@echo "... algorithms/fft.i"
 	@echo "... algorithms/fft.s"
@@ -419,6 +477,9 @@ help:
 	@echo "... main/opencv.o"
 	@echo "... main/opencv.i"
 	@echo "... main/opencv.s"
+	@echo "... main/sound.o"
+	@echo "... main/sound.i"
+	@echo "... main/sound.s"
 	@echo "... utility/audio_wrapper.o"
 	@echo "... utility/audio_wrapper.i"
 	@echo "... utility/audio_wrapper.s"

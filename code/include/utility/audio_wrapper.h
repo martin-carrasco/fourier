@@ -2,6 +2,7 @@
 #define __AUDIO_WRAPPER_H__
 
 #include <SFML/Audio.hpp>
+#include "utility/image_manager.h"
 #include <string>
 #include <vector>
 
