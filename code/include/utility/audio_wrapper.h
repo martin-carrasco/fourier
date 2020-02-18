@@ -15,6 +15,7 @@ class FourierAudio {
     void playAudio(void) const;
     void printBuffer(void) const;
     void plotSignal(void) const;
+		static std::vector<cn> hilbert_curve(CMatrix mat);
 		static std::vector<cn> transform2DTo1D(CMatrix mat);
 };
 #endif

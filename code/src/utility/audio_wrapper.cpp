@@ -1,13 +1,11 @@
 #include "algorithms/fft.h"
 #include "utility/audio_wrapper.h"
-#include "utility/matplotlibcpp.h"
 #include <SFML/Audio/SoundBufferRecorder.hpp>
-#include <boost/python.hpp>
-#include <pygtk/pygtk.h>
 #include <exception>
-#include <gtkmm.h>
 #include <iostream>
 #include <string>
+#include <fstream>
+
 
 #define AUDIO_PATH "res/audio/"
 
@@ -17,14 +15,40 @@ namespace little_endian_io
   std::ostream& write_word( std::ostream& outs, Word value, unsigned size = sizeof( Word ) )
   {
     for (; size; --size, value >>= 8)
-      outs.put( static_cast <char> (value & 0xFF) );
+      outs.put( static_cast <char> (((int)value) & 0xFF) );
     return outs;
   }
 }
+
+void rot(int n, int *x, int *y, int rx, int ry) {
+    if (ry == 0) {
+        if (rx == 1) {
+            *x = n-1 - *x;
+            *y = n-1 - *y;
+        }
+
+        //Swap x and y
+        int t  = *x;
+        *x = *y;
+        *y = t;
+    }
+}
+
+int xy2d (int n, int x, int y) {
+    int rx, ry, s, d=0;
+    for (s=n/2; s>0; s/=2) {
+        rx = (x & s) > 0;
+        ry = (y & s) > 0;
+        d += s * s * ((3 * rx) ^ ry);
+        rot(n, &x, &y, rx, ry);
+    }
+    return d;
+}
 using namespace std;
+using namespace little_endian_io;
 
 FourierAudio::FourierAudio(vector<cn> raw){
-	ofstream f("test_audio.wav", ios::binary);
+	ofstream f(AUDIO_PATH + string("test_audio.wav"), ios::binary);
 	double hz = 44100; //Sample per second from the function
 	double bits_per_sample = 1000;
 	double sample_rate =10;
@@ -32,48 +56,69 @@ FourierAudio::FourierAudio(vector<cn> raw){
 	f << "RIFF";
 	f << "----"; // Fill with the size of input data
 	f << "WAVE";
-	f << "fmt";
-	write_word(f, 16, 4); // Chunk data size
-	write_word(f, 1, 2); // Format (compression code)
-	write_word(f, 2, 2); // 2 bytes - Channels (default: 2)
-	write_word(f, hz, 4); // 4 bytes - Sample per second (HZ)
-	write_word(f, (sample_rate * bits_per_sample * channels) / 8, 4); // 4 bytes - (Sample Rate * Bits per sample *Channels ) / 8
-	write_word(f, 4, 2); // 2 bytes - Data block size (size of 2 integer samples, one for each channel)
-	write_word(f, 16, 2);  // 2 bytes - Number of bits per samble (multiple of 8 so as to use bytes)
+	f << "fmt ";
+	write_word<int>(f, 16, 4); // Chunk data size
+	write_word<int>(f, 1, 2); // Format (compression code)
+	write_word<int>(f, 2, 2); // 2 bytes - Channels (default: 2)
+	write_word<int>(f, hz, 4); // 4 bytes - Sample per second (HZ)
+	write_word<int>(f, 176400, 4);
+//	write_word<int>(f, (int)(sample_rate * bits_per_sample * channels) / 8, 4); // 4 bytes - (Sample Rate * Bits per sample *Channels ) / 8
+	write_word<int>(f, 4, 2); // 2 bytes - Data block size (size of 2 integer samples, one for each channel)
+	write_word<int>(f, 16, 2);  // 2 bytes - Number of bits per samble (multiple of 8 so as to use bytes)
 	
 	size_t data_chunk_pos = f.tellp();
-  stream.write("data", 4);
-	f << ""; // Data buffer size
-	f << ""; //Data buffer 
+  f << "data---";
 
 	constexpr double two_pi = 6.283185307179586476925286766559;
 	constexpr double max_amplitude = 32760;
 
 	double frequency = 261.626;
-	double seconds = 2.5;
+	double seconds = 10;
 
+	for (int x = 0; x < raw.size(); x++){
+		write_word(f, (int)(raw[x]).real(), 2);
+	}
+
+/*
 	int N = hz * seconds;
 	for(int x = 0;x < N;x++){
 		double amplitude = (double) x / N * max_amplitude;
 		double value = sin( (two_pi * x * frequency) / hz);
 		write_word(f, (int)(amplitude * value), 2);
 		write_word(f, (int)((max_amplitude - amplitude) * value), 2);
-	}
+	}*/
 
 	size_t file_len = f.tellp();
 	f.seekp(data_chunk_pos + 4);
-	write_word(f, file_len - data_chunk_pos + 8);
+	write_word<int>(f, file_len - data_chunk_pos + 8);
 
 	f.seekp(4);
-	write_word(f, file_len -8, 4)
+	write_word<int>(f, file_len -8, 4);
+
+	readAudio("test_audio.wav");
 }
 
 
-void FourierAudio::readAudio(const std::string path) {
-    std::cout << "Reading audio file from: " << AUDIO_PATH << path << "\n";
-    if (not buffer.loadFromFile(AUDIO_PATH + path))
+vector<cn> FourierAudio::hilbert_curve(CMatrix mat){
+	vector<cn> freq_repre(mat.size() * mat.size(), 0); // Create the 1D representation size
+
+	for(int x = 0;x < mat.size();x++){
+		for(int y = 0; y < mat.size();y++){
+			freq_repre[xy2d(mat.size(), x, y)] =  mat[x][y];
+		}
+	}
+	return freq_repre;
+}
+vector<cn> FourierAudio::transform2DTo1D(CMatrix mat){
+	//TODO: Do hilbert curve or peanno curve
+	return hilbert_curve(mat);
+}
+void FourierAudio::readAudio(const string path) {
+    cout << "Reading audio file from: " << AUDIO_PATH << path << "\n";
+    if (!buffer.loadFromFile(AUDIO_PATH + path)){
         throw std::runtime_error("File " AUDIO_PATH + path +
                                  " couldn't be found.");
+		}
 }
 
 void FourierAudio::playAudio(void) const {
@@ -93,7 +138,7 @@ void FourierAudio::printBuffer(void) const {
     std::cout << std::endl;
 }
 
-void FourierAudio::plotSignal(void) const {
+/*void FourierAudio::plotSignal(void) const {
 		namespace plt = matplotlibcpp;
 
 		auto raw_samples = buffer.getSamples();
@@ -101,11 +146,11 @@ void FourierAudio::plotSignal(void) const {
 		vector<auto> samples(raw_samples, raw_samples + count);
 		plt::plot(samples);
 		plt::show();
-}
+}*/
 
 
 
-int main(int argc, const char* argv[]) {
+/*int main(int argc, const char* argv[]) {
   // first check if an input audio device is available on the system
   std::string cmd;
   bool recorded = false;
@@ -159,5 +204,5 @@ int main(int argc, const char* argv[]) {
   }
 
   return 0;
-}
+}*/
 
