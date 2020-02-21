@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+#include <cmath>
 
 #define AUDIO_PATH "res/audio/"
 
@@ -47,7 +47,14 @@ int xy2d (int n, int x, int y) {
 using namespace std;
 using namespace little_endian_io;
 
-FourierAudio::FourierAudio(vector<cn> raw){
+double magn(vector<double> v) {
+    double sum = 0;
+
+    for (auto x : v) sum += pow(x, 2);
+
+    return sqrt(sum);
+}
+void FourierAudio::makeWav(vector<cn> raw){
 	ofstream f(AUDIO_PATH + string("test_audio.wav"), ios::binary);
 	double hz = 44100; //Sample per second from the function
 	double bits_per_sample = 1000;
@@ -69,15 +76,10 @@ FourierAudio::FourierAudio(vector<cn> raw){
 	size_t data_chunk_pos = f.tellp();
   f << "data---";
 
-	constexpr double two_pi = 6.283185307179586476925286766559;
-	constexpr double max_amplitude = 32760;
 
 	double frequency = 261.626;
 	double seconds = 10;
 
-	for (int x = 0; x < raw.size(); x++){
-		write_word(f, (int)(raw[x]).real(), 2);
-	}
 
 /*
 	int N = hz * seconds;
@@ -94,10 +96,26 @@ FourierAudio::FourierAudio(vector<cn> raw){
 
 	f.seekp(4);
 	write_word<int>(f, file_len -8, 4);
-
-	readAudio("test_audio.wav");
+	f.close();
 }
 
+FourierAudio::FourierAudio(){}
+
+void FourierAudio::readBufferFromVec(std::vector<cn> raw){
+	sf::Int16 raw_samples[raw.size()];
+  int c = 20;
+
+	for (int x = 0; x < raw.size(); x++){
+    //int temp = c * log(1 + magn({raw[x].real(), raw[x].imag()}));
+		int temp = raw[x].real();
+		raw_samples[x] = temp;
+	}
+
+	if(!buffer.loadFromSamples(raw_samples, raw.size(), 1, 14080)){
+		cout << "error reading samples" << endl;
+		return;
+	}
+}
 
 vector<cn> FourierAudio::hilbert_curve(CMatrix mat){
 	vector<cn> freq_repre(mat.size() * mat.size(), 0); // Create the 1D representation size
@@ -114,10 +132,11 @@ vector<cn> FourierAudio::transform2DTo1D(CMatrix mat){
 	return hilbert_curve(mat);
 }
 void FourierAudio::readAudio(const string path) {
-    cout << "Reading audio file from: " << AUDIO_PATH << path << "\n";
-    if (!buffer.loadFromFile(AUDIO_PATH + path)){
-        throw std::runtime_error("File " AUDIO_PATH + path +
-                                 " couldn't be found.");
+
+		string abs_path = AUDIO_PATH + path;
+    cout << "Reading audio file from: " << abs_path << "\n";
+    if (!buffer.loadFromFile(abs_path)){
+        throw std::runtime_error("File "+ abs_path+" couldn't be found.");
 		}
 }
 
@@ -125,7 +144,10 @@ void FourierAudio::playAudio(void) const {
     if (buffer.getSampleCount() == 0)
         throw std::runtime_error("No audio to play.");
 
-    sf::Sound sound(buffer);
+    sf::Sound sound;
+		sound.setBuffer(buffer);
+		sound.setLoop(false);
+		sound.setVolume(100);
     sound.play();
     while (sound.getStatus() == sf::Music::Playing);
 }

@@ -10,11 +10,14 @@ class FourierAudio {
     sf::SoundBuffer buffer;
 
    public:
-		FourierAudio(std::vector<cn> raw);
+		FourierAudio();
+		void makeWav(std::vector<cn> raw);
+		void readBufferFromVec(std::vector<cn> raw);
     void readAudio(const std::string path);
     void playAudio(void) const;
     void printBuffer(void) const;
     void plotSignal(void) const;
+
 		static std::vector<cn> hilbert_curve(CMatrix mat);
 		static std::vector<cn> transform2DTo1D(CMatrix mat);
 };

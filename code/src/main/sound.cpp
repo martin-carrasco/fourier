@@ -7,21 +7,28 @@
 #include <vector>
 
 #define INPUT_PATH "res/image/input/"
-#define OUTPUT_PATH "res/audio/output/"
-#define _FILE "calato.JPG"
+#define OUTPUT_PATH "./res/audio/output/"
+#define _FILE "canez_bigot.jpg"
+
+using namespace std;
 
 int main(void) {
     auto matrix = read_img(std::string(INPUT_PATH) + std::string(_FILE));
 
     ImageTransform q(matrix);
-		
+		cout << "Image loaded" << endl;		
     q.pad();
     q.center();
     q.transform(false);
-		
-		auto out_freq_img = display_img(q.get_matrix(), 1);
-		FourierAudio fa(FourierAudio::transform2DTo1D(q.get_matrix()));
 
+		cout << "Transformation" << endl;
+		auto out_freq_img = display_img(q.get_matrix(), 1);
+
+		cv::waitKey(0);
+		FourierAudio fa;
+		//fa.makeWav(FourierAudio::transform2DTo1D(q.get_matrix()));
+		fa.readBufferFromVec(FourierAudio::transform2DTo1D(q.get_matrix()));
+		cout << "Audio" <<endl;
 		fa.playAudio();	
 
     cv::waitKey(0);
