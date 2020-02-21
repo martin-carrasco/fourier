@@ -29,6 +29,7 @@ int main(void) {
 		//fa.makeWav(FourierAudio::transform2DTo1D(q.get_matrix()));
 		fa.readBufferFromVec(FourierAudio::transform2DTo1D(q.get_matrix()));
 		cout << "Audio" <<endl;
+		//fa.printBuffer();
 		fa.playAudio();	
 
     cv::waitKey(0);

@@ -8,6 +8,7 @@
 
 class FourierAudio {
     sf::SoundBuffer buffer;
+		std::vector<unsigned int> buckets{55, 110, 220, 440, 880};
 
    public:
 		FourierAudio();

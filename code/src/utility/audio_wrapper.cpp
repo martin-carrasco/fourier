@@ -102,13 +102,23 @@ void FourierAudio::makeWav(vector<cn> raw){
 FourierAudio::FourierAudio(){}
 
 void FourierAudio::readBufferFromVec(std::vector<cn> raw){
-	sf::Int16 raw_samples[raw.size()];
+	sf::Int16 raw_samples[raw.size() * 2];
   int c = 20;
+	int sample_rate = 44100;	
+	for (int x = 0; x < raw.size() / 2; x++){
+		int mag = c * log(1 + sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2)));
+		cout << mag << endl;
 
-	for (int x = 0; x < raw.size(); x++){
-    //int temp = c * log(1 + magn({raw[x].real(), raw[x].imag()}));
-		int temp = raw[x].real();
-		raw_samples[x] = temp;
+		for (int i = 0;i < buckets.size();i++){
+			if (mag >= buckets[i] && mag < buckets[i+1]){
+				raw_samples[x] = (mag & 0xF0);
+				raw_samples[x+1] = (mag & 0x0F);
+			}
+		}
+	}
+	for(auto ele : raw_samples){
+		if (ele < 0)
+			cout << ele << endl;
 	}
 
 	if(!buffer.loadFromSamples(raw_samples, raw.size(), 1, 14080)){
