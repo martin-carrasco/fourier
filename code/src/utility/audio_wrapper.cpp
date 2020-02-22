@@ -110,21 +110,7 @@ void FourierAudio::makeWav(vector<cn> raw){
 FourierAudio::FourierAudio(){}
 
 void FourierAudio::readBufferFromVec(std::vector<cn> raw){
-	sf::Int16 raw_samples[raw.size()];
-	int r_max, r_min;
-	r_max = -100000;
-	r_min = 100000;
-
-	for (int x = 0;x < raw.size();x++){
-		raw_samples[x] = 0;
-	}
-	for (int x = 0;x < raw.size();x++){
-		int val = sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2));
-		if(val > r_max)
-			r_max = val;
-		if(val < r_min)
-			r_min = val; 
-	}
+	sf::Int16 * raw_samples = new sf::Int16[raw.size()];
 
   int volume_constant = 5;
 	//int sample_rate = static_cast<int>(sqrt(raw.size()));
@@ -132,14 +118,53 @@ void FourierAudio::readBufferFromVec(std::vector<cn> raw){
 	for (int x = 0; x < raw.size(); x++){
 		int mag = sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2));
 		cout << mag;
-		mag = scale_range(r_max, r_min, 440, 110, mag);
-		raw_samples[x] = static_cast<sf::Int16>(volume_constant * mag);
+		for (int oct = start_octave; oct <= end_octave;oct++){
+			unsigned int note = pow(2, oct) * start_note;
+			if(mag >= note and mag < pow(2, oct+1) * start_note){
+				raw_samples[x] = static_cast<sf::Int16>(note);
+			}
+		}
 	}
 
-	if(!buffer.loadFromSamples(raw_samples, raw.size(), 1, sample_rate)){
+	if(!buffer.loadFromSamples(raw_samples, raw.size(), 1, 20)){
 		cout << "error reading samples" << endl;
 		return;
 	}
+	
+	buffer.saveToFile("res/audio/output/beep_boop_3.ogg");
+
+	cout << "Finished saving";
+	
+	/*int hz = raw.size();
+	int sample_size = hz * 2;
+	int seconds = 10;
+	int N = hz * seconds;
+	sf::Int16 ** raw_samples = new sf::Int16*[seconds];
+	
+
+	for (int x = 0;x < 10;x++){
+		raw_samples[x] = new sf::Int16[sample_size];
+		for (int y = 0;y < sample_size;y++){
+			raw_samples[x][y] = 0;
+		}
+	}
+
+	int max_amplitude = 	15000;
+	for(int x = 0;x < sample_size * seconds;x+= 2){
+		int mag = sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2));
+		double amplitude = (double) x / (sample_size * seconds);
+		double value = sin( ((M_PI * 2) * x * (mag / seconds )) / hz);
+		cout << value;
+		raw_samples[static_cast<int>(x / hz)][x % hz] = amplitude * value;
+		raw_samples[static_cast<int>(x / hz)][(x % hz) + 1] = (max_amplitude - amplitude) * 2;
+	}
+	
+	for(int x = 0;x < 10;x++){
+		if(!buffer.loadFromSamples(raw_samples[x], sample_size(), 1, sample_size)){
+			cout << "error reading samples" << endl;
+			return;
+		}
+	}*/
 }
 
 vector<cn> FourierAudio::hilbert_curve(CMatrix mat){

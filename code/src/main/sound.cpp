@@ -8,7 +8,7 @@
 
 #define INPUT_PATH "res/image/input/"
 #define OUTPUT_PATH "./res/audio/output/"
-#define _FILE "kene_small.jpg"
+#define _FILE "kene_small_3.JPG"
 
 using namespace std;
 
@@ -29,7 +29,7 @@ int main(void) {
 		//fa.makeWav(FourierAudio::transform2DTo1D(q.get_matrix()));
 		fa.readBufferFromVec(FourierAudio::transform2DTo1D(q.get_matrix()));
 		cout << "Audio" <<endl;
-		fa.printBuffer();
+		//fa.printBuffer();
 		fa.playAudio();	
 		cout << "Finished" << endl;
 
