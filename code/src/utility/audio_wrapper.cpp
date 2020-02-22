@@ -33,6 +33,14 @@ void rot(int n, int *x, int *y, int rx, int ry) {
         *y = t;
     }
 }
+/**
+ * r_max/min Denotes the extremes of the actual range
+ * t_max/min Denotes the extremes of the target meassure
+ * m Number to be evaluated
+ */
+int scale_range(int r_max, int r_min, int t_max, int t_min, int m){
+	return (int)((m - r_min) / (r_max - r_min ) ) * (t_max - t_min) + t_min;
+}
 
 int xy2d (int n, int x, int y) {
     int rx, ry, s, d=0;
@@ -102,26 +110,33 @@ void FourierAudio::makeWav(vector<cn> raw){
 FourierAudio::FourierAudio(){}
 
 void FourierAudio::readBufferFromVec(std::vector<cn> raw){
-	sf::Int16 raw_samples[raw.size() * 2];
-  int c = 20;
-	int sample_rate = 44100;	
-	for (int x = 0; x < raw.size() / 2; x++){
-		int mag = c * log(1 + sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2)));
-		cout << mag << endl;
+	sf::Int16 raw_samples[raw.size()];
+	int r_max, r_min;
+	r_max = -100000;
+	r_min = 100000;
 
-		for (int i = 0;i < buckets.size();i++){
-			if (mag >= buckets[i] && mag < buckets[i+1]){
-				raw_samples[x] = (mag & 0xF0);
-				raw_samples[x+1] = (mag & 0x0F);
-			}
-		}
+	for (int x = 0;x < raw.size();x++){
+		raw_samples[x] = 0;
 	}
-	for(auto ele : raw_samples){
-		if (ele < 0)
-			cout << ele << endl;
+	for (int x = 0;x < raw.size();x++){
+		int val = sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2));
+		if(val > r_max)
+			r_max = val;
+		if(val < r_min)
+			r_min = val; 
 	}
 
-	if(!buffer.loadFromSamples(raw_samples, raw.size(), 1, 14080)){
+  int volume_constant = 5;
+	//int sample_rate = static_cast<int>(sqrt(raw.size()));
+	int sample_rate = sqrt(raw.size());
+	for (int x = 0; x < raw.size(); x++){
+		int mag = sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2));
+		cout << mag;
+		mag = scale_range(r_max, r_min, 440, 110, mag);
+		raw_samples[x] = static_cast<sf::Int16>(volume_constant * mag);
+	}
+
+	if(!buffer.loadFromSamples(raw_samples, raw.size(), 1, sample_rate)){
 		cout << "error reading samples" << endl;
 		return;
 	}

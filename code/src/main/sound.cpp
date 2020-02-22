@@ -8,7 +8,7 @@
 
 #define INPUT_PATH "res/image/input/"
 #define OUTPUT_PATH "./res/audio/output/"
-#define _FILE "canez_bigot.jpg"
+#define _FILE "kene_small.jpg"
 
 using namespace std;
 
@@ -17,7 +17,7 @@ int main(void) {
 
     ImageTransform q(matrix);
 		cout << "Image loaded" << endl;		
-    q.pad();
+		q.pad();
     q.center();
     q.transform(false);
 
@@ -29,8 +29,9 @@ int main(void) {
 		//fa.makeWav(FourierAudio::transform2DTo1D(q.get_matrix()));
 		fa.readBufferFromVec(FourierAudio::transform2DTo1D(q.get_matrix()));
 		cout << "Audio" <<endl;
-		//fa.printBuffer();
+		fa.printBuffer();
 		fa.playAudio();	
+		cout << "Finished" << endl;
 
     cv::waitKey(0);
     return 0;

@@ -8,8 +8,9 @@
 
 class FourierAudio {
     sf::SoundBuffer buffer;
-		std::vector<unsigned int> buckets{55, 110, 220, 440, 880};
-
+		unsigned int start_note = 110;
+		unsigned int start_octave = 1;
+		static constexpr unsigned int end_octave = 8;
    public:
 		FourierAudio();
 		void makeWav(std::vector<cn> raw);
