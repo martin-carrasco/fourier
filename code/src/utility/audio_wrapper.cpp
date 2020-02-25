@@ -1,13 +1,38 @@
 #include "algorithms/fft.h"
 #include "utility/audio_wrapper.h"
 #include <SFML/Audio/SoundBufferRecorder.hpp>
+#include <SFML/Graphics.hpp>
 #include <exception>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <thread>
+
+using namespace std;
 
 #define AUDIO_PATH "res/audio/"
+
+void FourierAudio::calc_freq(int hz, int second, int max_amplitude, const vector<cn>& raw, sf::Int16* raw_samples) {
+	double freq = 0;
+	int start_pos = hz * second;
+	for(int x = 0;x < hz;x++){
+		// mag  = sqrt(even^2 + odd^2)
+		double mag = sqrt(pow(raw[x + start_pos].real(), 2) + pow(raw[x + start_pos].imag(), 2));
+
+		// Changes of frequencies in a given wave (Maybe make a harmonic bucket ??? )
+		double current_point = sin(M_PI * 2 * freq * (second+1));
+		int value = max_amplitude * current_point;
+
+		// Calculation for the actual frequency value given in the sin
+		freq += mag / hz;
+		raw_samples[x] = value;
+		//cout << mag << endl;
+		//cout << current_point << endl;
+		//cout << value << endl << endl;;
+
+	}
+}
 
 namespace little_endian_io
 {
@@ -33,14 +58,6 @@ void rot(int n, int *x, int *y, int rx, int ry) {
         *y = t;
     }
 }
-/**
- * r_max/min Denotes the extremes of the actual range
- * t_max/min Denotes the extremes of the target meassure
- * m Number to be evaluated
- */
-int scale_range(int r_max, int r_min, int t_max, int t_min, int m){
-	return (int)((m - r_min) / (r_max - r_min ) ) * (t_max - t_min) + t_min;
-}
 
 int xy2d (int n, int x, int y) {
     int rx, ry, s, d=0;
@@ -62,109 +79,133 @@ double magn(vector<double> v) {
 
     return sqrt(sum);
 }
-void FourierAudio::makeWav(vector<cn> raw){
-	ofstream f(AUDIO_PATH + string("test_audio.wav"), ios::binary);
-	double hz = 44100; //Sample per second from the function
-	double bits_per_sample = 1000;
-	double sample_rate =10;
-	double channels = 2;
-	f << "RIFF";
-	f << "----"; // Fill with the size of input data
-	f << "WAVE";
-	f << "fmt ";
-	write_word<int>(f, 16, 4); // Chunk data size
-	write_word<int>(f, 1, 2); // Format (compression code)
-	write_word<int>(f, 2, 2); // 2 bytes - Channels (default: 2)
-	write_word<int>(f, hz, 4); // 4 bytes - Sample per second (HZ)
-	write_word<int>(f, 176400, 4);
-//	write_word<int>(f, (int)(sample_rate * bits_per_sample * channels) / 8, 4); // 4 bytes - (Sample Rate * Bits per sample *Channels ) / 8
-	write_word<int>(f, 4, 2); // 2 bytes - Data block size (size of 2 integer samples, one for each channel)
-	write_word<int>(f, 16, 2);  // 2 bytes - Number of bits per samble (multiple of 8 so as to use bytes)
-	
-	size_t data_chunk_pos = f.tellp();
-  f << "data---";
+void FourierAudio::makeOgg(){
 
-
-	double frequency = 261.626;
-	double seconds = 10;
-
-
-/*
-	int N = hz * seconds;
-	for(int x = 0;x < N;x++){
-		double amplitude = (double) x / N * max_amplitude;
-		double value = sin( (two_pi * x * frequency) / hz);
-		write_word(f, (int)(amplitude * value), 2);
-		write_word(f, (int)((max_amplitude - amplitude) * value), 2);
-	}*/
-
-	size_t file_len = f.tellp();
-	f.seekp(data_chunk_pos + 4);
-	write_word<int>(f, file_len - data_chunk_pos + 8);
-
-	f.seekp(4);
-	write_word<int>(f, file_len -8, 4);
-	f.close();
 }
 
 FourierAudio::FourierAudio(){}
 
-void FourierAudio::readBufferFromVec(std::vector<cn> raw){
-	sf::Int16 * raw_samples = new sf::Int16[raw.size()];
+void FourierAudio::playAndDraw(std::vector<cn> raw_buffer, int hz, int max_amplitude, pair<int, int> window_size){
+		int seconds = raw_buffer.size() / hz;		
+		int N = hz * seconds;
+		int current_second = 0;
 
-  int volume_constant = 5;
-	//int sample_rate = static_cast<int>(sqrt(raw.size()));
-	int sample_rate = sqrt(raw.size());
-	for (int x = 0; x < raw.size(); x++){
-		int mag = sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2));
-		cout << mag;
-		for (int oct = start_octave; oct <= end_octave;oct++){
-			unsigned int note = pow(2, oct) * start_note;
-			if(mag >= note and mag < pow(2, oct+1) * start_note){
-				raw_samples[x] = static_cast<sf::Int16>(note);
+		
+		// Basic preparation for SFML display
+		sf::RenderWindow window(sf::VideoMode(window_size.first, window_size.second), "Soundwave");
+		sf::VertexArray vert(sf::LineStrip, window_size.second);
+
+		// Drawing loop that iterates over the data in the seconds
+		while(window.isOpen()){
+			sf::Event event;
+			while(window.pollEvent(event)){
+				switch(event.type){
+					case sf::Event::Closed:
+							window.close();
+							break;
+				}
 			}
+
+			// Break if the seconds of sampling run out
+			if(current_second >= seconds)
+				break;
+
+			sf::Int16* raw_samples = new sf::Int16[hz];
+
+			// Calculate sample data based on frequencies
+			calc_freq(hz, current_second, max_amplitude, ref(raw_buffer), ref(raw_samples));
+
+			// Load sample data into graphical buffer
+			int rate = hz / window_size.first;
+			for(int i = 0;i < window_size.first;i++){
+				int samp = raw_samples[i * rate];
+				vert[i].position = sf::Vector2f(i, window_size.second/2 + samp / 10);
+				//cout << current_sample << endl;
+				//cout << raw_samples[0][i] << endl << endl;
+			}
+
+			// Load data into sound buffer (TODO CHANGE TO sf::Music)
+			sf::SoundBuffer current_buffer;
+			current_buffer.loadFromSamples(raw_samples, hz, 1, hz);
+			sf::Sound sound;
+			sound.setBuffer(current_buffer);
+			sound.setLoop(false);
+
+			// Clear window draw and play audio
+			window.clear();
+			window.draw(vert);
+			window.display();
+			sound.play();
+
+			while (sound.getStatus() == sf::Music::Playing);
+
+			current_second++;
 		}
-	}
+}
 
-	if(!buffer.loadFromSamples(raw_samples, raw.size(), 1, 20)){
-		cout << "error reading samples" << endl;
-		return;
-	}
-	
-	buffer.saveToFile("res/audio/output/beep_boop_3.ogg");
-
-	cout << "Finished saving";
-	
-	/*int hz = raw.size();
-	int sample_size = hz * 2;
-	int seconds = 10;
+void FourierAudio::readBuffer(std::vector<cn> raw){
+	int hz = raw.size();
+	int seconds = 1;
 	int N = hz * seconds;
 	sf::Int16 ** raw_samples = new sf::Int16*[seconds];
 	
-
-	for (int x = 0;x < 10;x++){
-		raw_samples[x] = new sf::Int16[sample_size];
-		for (int y = 0;y < sample_size;y++){
+	for (int x = 0;x < seconds;x++){
+		raw_samples[x] = new sf::Int16[hz];
+		for (int y = 0;y < hz;y++){
 			raw_samples[x][y] = 0;
 		}
 	}
 
-	int max_amplitude = 	15000;
-	for(int x = 0;x < sample_size * seconds;x+= 2){
-		int mag = sqrt(pow(raw[x].real(), 2) + pow(raw[x].imag(), 2));
-		double amplitude = (double) x / (sample_size * seconds);
-		double value = sin( ((M_PI * 2) * x * (mag / seconds )) / hz);
-		cout << value;
-		raw_samples[static_cast<int>(x / hz)][x % hz] = amplitude * value;
-		raw_samples[static_cast<int>(x / hz)][(x % hz) + 1] = (max_amplitude - amplitude) * 2;
+	double freq = 0;
+	int max_amplitude =	1000;
+	
+	vector<thread> workers;
+	for(int i = 0;i < seconds;i++){
+		workers.push_back(thread(calc_freq, i, hz, max_amplitude, ref(raw), raw_samples[i]));
+		cout << "Exec thread: " << i << endl;
+	}
+
+	for(auto & t : workers){
+		t.join();
+		cout << "Thread finished" << endl;
 	}
 	
-	for(int x = 0;x < 10;x++){
-		if(!buffer.loadFromSamples(raw_samples[x], sample_size(), 1, sample_size)){
-			cout << "error reading samples" << endl;
-			return;
+	sf::RenderWindow window(sf::VideoMode(800, 800), "Soundwave");
+	sf::VertexArray vert(sf::LineStrip, 800);
+
+	int rate = raw.size() / 800;
+
+	for(int i = 0;i < 800;i++){
+		int current_sample = raw_samples[0][i * rate];
+		vert[i].position = sf::Vector2f(i, 800/2 + current_sample / 10);
+		//cout << current_sample << endl;
+		//cout << raw_samples[0][i] << endl << endl;
+	}
+	while(window.isOpen()){
+		sf::Event event;
+		while(window.pollEvent(event)){
+			switch(event.type){
+				case sf::Event::Closed:
+						window.close();
+						break;
+			}
+			window.clear();
+			window.draw(vert);
+			window.display();
 		}
-	}*/
+	}
+
+	for(int x = 0;x < seconds;x++){
+		if(!buffer.loadFromSamples(raw_samples[x], hz, 1, hz)){
+			cout << "error reading samples" << endl;
+		}
+    sf::Sound sound;
+		sound.setBuffer(buffer);
+		sound.setLoop(false);
+    sound.play();
+
+    while (sound.getStatus() == sf::Music::Playing);
+	}
 }
 
 vector<cn> FourierAudio::hilbert_curve(CMatrix mat){

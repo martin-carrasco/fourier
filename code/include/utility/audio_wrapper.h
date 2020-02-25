@@ -11,10 +11,12 @@ class FourierAudio {
 		unsigned int start_note = 110;
 		unsigned int start_octave = 1;
 		static constexpr unsigned int end_octave = 8;
+		static void calc_freq(int hz, int seconds, int max_amplitude, const std::vector<cn> & raw, sf::Int16* raw_samples);
    public:
 		FourierAudio();
-		void makeWav(std::vector<cn> raw);
-		void readBufferFromVec(std::vector<cn> raw);
+		void makeOgg();
+		void playAndDraw(std::vector<cn> raw_buffer, int hz, int max_amplitude, std::pair<int, int> window_size);
+		void readBuffer(std::vector<cn> raw);
     void readAudio(const std::string path);
     void playAudio(void) const;
     void printBuffer(void) const;
