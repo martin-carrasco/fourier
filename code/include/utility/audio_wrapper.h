@@ -14,7 +14,7 @@ class FourierAudio {
 		static void calc_freq(int hz, int seconds, int max_amplitude, const std::vector<cn> & raw, sf::Int16* raw_samples);
    public:
 		FourierAudio();
-		void makeOgg();
+		void makeOgg(const std::string& path);
 		void playAndDraw(std::vector<cn> raw_buffer, int hz, int max_amplitude, std::pair<int, int> window_size);
 		void readBuffer(std::vector<cn> raw);
     void readAudio(const std::string path);

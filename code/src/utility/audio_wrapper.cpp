@@ -69,18 +69,12 @@ int xy2d (int n, int x, int y) {
     }
     return d;
 }
+
 using namespace std;
 using namespace little_endian_io;
 
-double magn(vector<double> v) {
-    double sum = 0;
-
-    for (auto x : v) sum += pow(x, 2);
-
-    return sqrt(sum);
-}
-void FourierAudio::makeOgg(){
-
+void FourierAudio::makeOgg(const string& path){
+	buffer.saveToFile(path);
 }
 
 FourierAudio::FourierAudio(){}
@@ -126,7 +120,7 @@ void FourierAudio::playAndDraw(std::vector<cn> raw_buffer, int hz, int max_ampli
 
 			// Load data into sound buffer (TODO CHANGE TO sf::Music)
 			sf::SoundBuffer current_buffer;
-			current_buffer.loadFromSamples(raw_samples, hz, 1, hz);
+			current_buffer.loadFromSamples(raw_samples, hz, 1, 44100);
 			sf::Sound sound;
 			sound.setBuffer(current_buffer);
 			sound.setLoop(false);
@@ -135,6 +129,7 @@ void FourierAudio::playAndDraw(std::vector<cn> raw_buffer, int hz, int max_ampli
 			window.clear();
 			window.draw(vert);
 			window.display();
+			sound.setLoop(true);
 			sound.play();
 
 			while (sound.getStatus() == sf::Music::Playing);
@@ -144,68 +139,22 @@ void FourierAudio::playAndDraw(std::vector<cn> raw_buffer, int hz, int max_ampli
 }
 
 void FourierAudio::readBuffer(std::vector<cn> raw){
-	int hz = raw.size();
-	int seconds = 1;
-	int N = hz * seconds;
-	sf::Int16 ** raw_samples = new sf::Int16*[seconds];
-	
-	for (int x = 0;x < seconds;x++){
-		raw_samples[x] = new sf::Int16[hz];
-		for (int y = 0;y < hz;y++){
-			raw_samples[x][y] = 0;
-		}
-	}
+		int seconds = 1;		
+		int hz = raw.size();
+		int max_amplitude = 10000;
+		int N = hz * seconds;
+		int current_second = 0;
 
-	double freq = 0;
-	int max_amplitude =	1000;
-	
-	vector<thread> workers;
-	for(int i = 0;i < seconds;i++){
-		workers.push_back(thread(calc_freq, i, hz, max_amplitude, ref(raw), raw_samples[i]));
-		cout << "Exec thread: " << i << endl;
-	}
+		sf::Int16* raw_samples = new sf::Int16[hz];
 
-	for(auto & t : workers){
-		t.join();
-		cout << "Thread finished" << endl;
-	}
-	
-	sf::RenderWindow window(sf::VideoMode(800, 800), "Soundwave");
-	sf::VertexArray vert(sf::LineStrip, 800);
+		// Calculate sample data based on frequencies
+		calc_freq(hz, current_second, max_amplitude, ref(raw), ref(raw_samples));
 
-	int rate = raw.size() / 800;
-
-	for(int i = 0;i < 800;i++){
-		int current_sample = raw_samples[0][i * rate];
-		vert[i].position = sf::Vector2f(i, 800/2 + current_sample / 10);
-		//cout << current_sample << endl;
-		//cout << raw_samples[0][i] << endl << endl;
-	}
-	while(window.isOpen()){
-		sf::Event event;
-		while(window.pollEvent(event)){
-			switch(event.type){
-				case sf::Event::Closed:
-						window.close();
-						break;
-			}
-			window.clear();
-			window.draw(vert);
-			window.display();
-		}
-	}
-
-	for(int x = 0;x < seconds;x++){
-		if(!buffer.loadFromSamples(raw_samples[x], hz, 1, hz)){
-			cout << "error reading samples" << endl;
-		}
-    sf::Sound sound;
-		sound.setBuffer(buffer);
-		sound.setLoop(false);
-    sound.play();
-
-    while (sound.getStatus() == sf::Music::Playing);
-	}
+		// Load data into sound buffer (TODO CHANGE TO sf::Music)
+		buffer.loadFromSamples(raw_samples, hz, 1, 44100);
+		cout << hz << endl;
+		cout << buffer.getSampleRate() << endl
+			<< buffer.getSampleCount() << endl;
 }
 
 vector<cn> FourierAudio::hilbert_curve(CMatrix mat){
@@ -218,10 +167,7 @@ vector<cn> FourierAudio::hilbert_curve(CMatrix mat){
 	}
 	return freq_repre;
 }
-vector<cn> FourierAudio::transform2DTo1D(CMatrix mat){
-	//TODO: Do hilbert curve or peanno curve
-	return hilbert_curve(mat);
-}
+
 void FourierAudio::readAudio(const string path) {
 
 		string abs_path = AUDIO_PATH + path;
@@ -250,72 +196,3 @@ void FourierAudio::printBuffer(void) const {
     for (int i = 0; i < count; ++i) std::cout << samples[i] << " ";
     std::cout << std::endl;
 }
-
-/*void FourierAudio::plotSignal(void) const {
-		namespace plt = matplotlibcpp;
-
-		auto raw_samples = buffer.getSamples();
-		auto count = buffer.getSampleCount();
-		vector<auto> samples(raw_samples, raw_samples + count);
-		plt::plot(samples);
-		plt::show();
-}*/
-
-
-
-/*int main(int argc, const char* argv[]) {
-  // first check if an input audio device is available on the system
-  std::string cmd;
-  bool recorded = false;
-  if (!sf::SoundBufferRecorder::isAvailable()) {
-  }  // create the recorder
-  sf::SoundBufferRecorder recorder;
-
-  // start the capture
-  while (true) {
-    cout << ">> ";
-    cin >> cmd;
-
-    if (cmd.compare("exit") == 0) break;
-    if (cmd.compare("record") == 0) {
-      cout << "Recording...\n";
-      recorder.start();
-      cmd.clear();
-      while (true) {
-        cout << ">> ";
-        cin >> cmd;
-        if (cmd.compare("stop") == 0) {
-          recorder.stop();
-          cout << "Stopped recording...\n";
-          recorded = true;
-          break;
-        }
-      }
-      cmd.clear();
-      cout << ">> ";
-      cin >> cmd;
-    }
-
-    if (cmd.compare("play") == 0 and recorded) {
-      cout << "Playing recorded\n";
-      const sf::SoundBuffer& buffer = recorder.getBuffer();
-      sf::Sound sound;
-      sound.setBuffer(buffer);
-      sound.stop();
-      sound.play();
-      sf::Sound::Status Status = sound.getStatus();
-      const sf::Int16* Samples = buffer.getSamples();
-      std::size_t Count = buffer.getSampleCount();
-      cout << "played\n";
-    }
-    if (cmd.compare("save") == 0 and recorded) {
-      cout << "Saving recorded\n";
-      const sf::SoundBuffer& buffer = recorder.getBuffer();
-      buffer.saveToFile("my_record.ogg");
-    }
-    cmd.clear();
-  }
-
-  return 0;
-}*/
-
