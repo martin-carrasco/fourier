@@ -1,8 +1,10 @@
 #include "utility/opencv_manager.h"
 #include <cmath>
 #include <iostream>
+#include <string>
 
 using namespace std;
+static int counter = 0;
 
 int nextPowerOf2(int n) {
     int count = 0;
@@ -20,7 +22,7 @@ int nextPowerOf2(int n) {
 }
 
 vector<vector<cn>> read_img(const std::string filename) {
-    Img image = cv::imread(INPUT_PATH + filename, cv::IMREAD_GRAYSCALE);
+    Img image = cv::imread(filename, cv::IMREAD_GRAYSCALE);
     int rows, cols, mod_rows, mod_cols;
     rows = image.rows;
     cols = image.cols;
@@ -62,6 +64,41 @@ double magnitude(vector<double> v) {
     return sqrt(sum);
 }
 
+Img display_filter(vector<vector<cn>> matrix, bool domain = false){
+    // Now add all the data into a Mat element
+    int rows = matrix.size();
+    int cols = matrix[0].size();
+    Img vect = Img::zeros(rows, cols, CV_8UC1);
+    // int c = 255 / log(1 + 255);
+    int c = 20;
+    // Loop over vectors and add the data
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int temp = 0;
+            auto elem = matrix[row][col];
+            if (domain) {
+                /*
+                std::cout << "magnitude: "
+                          << magnitude({elem.real(), elem.imag()});
+                */
+                temp = c * log(1 + magnitude({elem.real(), elem.imag()}));
+                //std::cout << " power: ";
+                //std::cout << temp << "\n";
+            } else {
+                temp = floor(matrix[row][col].real());
+            }
+
+            vect.at<uchar>(row, col) = temp < 0 ? 0 : temp * 255;
+        }
+    }
+
+    //cout << "Finished adding data\n";
+    // Show image
+    cv::namedWindow(std::string("Image") + std::to_string(++counter),
+                    cv::WINDOW_NORMAL);
+    cv::imshow(std::string("Image") + std::to_string(counter), vect);
+    return vect;
+}
 // time = 0
 // frequency = 1
 Img display_img(vector<vector<cn>> matrix, bool domain = false) {
@@ -77,11 +114,13 @@ Img display_img(vector<vector<cn>> matrix, bool domain = false) {
             int temp = 0;
             auto elem = matrix[row][col];
             if (domain) {
+                /*
                 std::cout << "magnitude: "
                           << magnitude({elem.real(), elem.imag()});
+                */
                 temp = c * log(1 + magnitude({elem.real(), elem.imag()}));
-                std::cout << " power: ";
-                std::cout << temp << "\n";
+                //std::cout << " power: ";
+                //std::cout << temp << "\n";
             } else {
                 temp = floor(matrix[row][col].real());
             }
@@ -90,10 +129,10 @@ Img display_img(vector<vector<cn>> matrix, bool domain = false) {
         }
     }
 
-    cout << "Finished adding data\n";
+    //cout << "Finished adding data\n";
     // Show image
-    cv::namedWindow("Image", cv::WINDOW_NORMAL);
-    cv::imshow("Image", vect);
-    cv::waitKey(0);
+    cv::namedWindow(std::string("Image") + std::to_string(++counter),
+                    cv::WINDOW_NORMAL);
+    cv::imshow(std::string("Image") + std::to_string(counter), vect);
     return vect;
 }

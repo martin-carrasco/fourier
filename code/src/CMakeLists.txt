@@ -12,7 +12,7 @@ SET (project_MOC_HEADERS app.h)
 SET (project_LIBS  ${SFMLall_LIBRARIES} ${PYTHON_LIBRARIES} ${OpenCV_LIBRARIES} -lstdc++fs)
 # SET (project_LIBS  ${SFMLall_LIBRARIES}  ${OpenCV_LIBRARIES})
 
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wfloat-conversion")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpthread -g -Wall -Wfloat-conversion")
 
 MESSAGE("ALL MAIN FILES: ${main_files}")
 
