@@ -8,6 +8,7 @@ RUN apt-get update \
   && cd /usr/local/bin \
   && ln -s /usr/bin/python3 python \
   && pip3 install --upgrade pip
+	&& pip3 install numpy
 
 # INSTALL CPP
 RUN apt-get install -y build-essential cmake

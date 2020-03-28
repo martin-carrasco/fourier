@@ -7,7 +7,7 @@ using namespace cv;
 int main(int argc, char** argv) {
     const char* filename = "res/image/input/canezbigote.jpg";
     std::cout << "Reading file: " << filename;
-    Mat I = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+    Mat I = imread(filename, cv::IMREAD_GRAYSCALE);
     if (I.empty()) return -1;
 
     Mat padded;  // expand input image to optimal size
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
     normalize(
         magI, magI, 0, 1,
-        CV_MINMAX);  // Transform the matrix with float values into a
+        CV_MMX);  // Transform the matrix with float values into a
                      // viewable image form (float between values 0 and 1).
 
     cv::namedWindow("Input Image", cv::WINDOW_NORMAL);

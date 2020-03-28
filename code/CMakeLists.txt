@@ -1,8 +1,7 @@
 # <Copyright Holder>. Copyright (C) <Copyright Year(s)>. <License>.
 
 #
-# Project Properties
-#
+# Project Properties 
 CMAKE_MINIMUM_REQUIRED (VERSION 3.1)
 PROJECT (projectname)
 SET (APPLICATION_NAME "Fourier Me ( ͡° ͜ʖ ͡°)")
@@ -99,7 +98,8 @@ INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
 LINK_DIRECTORIES(${PYTHON_LIBRARY_DIRS})
 
 
-PKG_CHECK_MODULES(OpenCV REQUIRED opencv)
+PKG_CHECK_MODULES(OpenCV REQUIRED opencv4)
+FIND_PACKAGE(OpenCV REQUIRED)
 INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 LINK_DIRECTORIES(${OpenCV_LINK_DIRS})
 
